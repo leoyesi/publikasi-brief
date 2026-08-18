@@ -169,17 +169,26 @@
     }
 
     async function loadData() {
-      showToast("Memuat data...");
-      try {
-        const res = await fetch(SCRIPT_URL);
-        allData = await res.json();
-        renderData();
-        showToast("Data berhasil diperbarui!");
-      } catch (err) {
-        console.error("Gagal memuat data:", err);
-        showToast("Gagal mengambil data!", true);
-      }
+  showToast("Memuat data...");
+  try {
+    const res = await fetch(SCRIPT_URL);
+    if (!res.ok) throw new Error(`HTTP Status ${res.status}`);
+    
+    const rawText = await res.text();
+    
+    // Deteksi jika server mengembalikan halaman HTML login / error
+    if (rawText.trim().startsWith("<")) {
+      throw new Error("Izin Google Apps Script belum set ke 'Anyone' (Siapa Saja) atau URL Web App salah.");
     }
+
+    allData = JSON.parse(rawText);
+    renderData();
+    showToast("Data berhasil diperbarui!");
+  } catch (err) {
+    console.error("Gagal memuat data:", err);
+    showToast("Gagal mengambil data! " + err.message, true);
+  }
+}
 
     function parseTglDanWaktu(rawStr) {
       if (!rawStr) return { dateObj: null, timeStr: "07:00 AM", bulanTahun: "", tglFormatted: "-" };
