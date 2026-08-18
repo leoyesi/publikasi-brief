@@ -4,43 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kontrol Penugasan Publikasi</title>
-  <!-- Tailwind CSS -->
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Google Fonts: Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .personnel-tag { transition: all 0.15s ease-in-out; }
-    .personnel-tag.active { background-color: #1d4ed8; color: #ffffff; border-color: #1d4ed8; }
+    body {
+      font-family: 'Inter', sans-serif;
+    }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen pb-12">
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-10">
 
   <!-- Header / Navbar -->
   <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-30 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-3">
         <div class="p-2 bg-indigo-600 rounded-lg text-white">
-          <i class="fa-solid fa-clipboard-check text-xl"></i>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
         </div>
         <div>
-          <h1 class="font-bold text-lg leading-tight text-white">KONTROL PENUGASAN PUBLIKASI</h1>
+          <h1 class="text-lg font-bold text-white leading-tight">KONTROL PENUGASAN PUBLIKASI</h1>
           <p class="text-xs text-slate-400">Sistem Manajemen Brief & Brief Strategis</p>
         </div>
       </div>
+
       <div class="flex items-center gap-2">
-        <button onclick="openMendadakModal()" class="bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-          <i class="fa-solid fa-bolt"></i> + Order Mendadak
+        <button onclick="openMendadakModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-4 py-2 rounded-lg text-sm flex items-center gap-1.5 transition">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1a1 1 0 10-2 0v1a1 1 0 102 0zM12 14a2 2 0 100-4 2 2 0 000 4z"/></svg>
+          + Order Mendadak
         </button>
-        <button onclick="copyRekapWA()" class="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-          <i class="fa-solid fa-copy"></i> Copy Rekap Grup WA
+        <button onclick="copyRekapWA()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2 rounded-lg text-sm flex items-center gap-1.5 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+          Copy Rekap Grup WA
         </button>
-        <button onclick="loadData()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-          <i class="fa-solid fa-rotate-right" id="refresh-icon"></i>
+        <button onclick="loadData()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 p-2 rounded-lg transition" title="Refresh Data">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
         </button>
       </div>
     </div>
@@ -49,255 +50,178 @@
   <!-- Main Container -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
 
-    <!-- Filter Bar: Periode Dynamic & Search -->
-    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col sm:flex-row gap-3 items-center justify-between">
+    <!-- Filter & Search Bar -->
+    <div class="bg-slate-800/80 backdrop-blur rounded-xl p-4 border border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-3 w-full sm:w-auto">
-        <label class="text-xs font-semibold text-slate-400 uppercase">Periode:</label>
-        <select id="filter-periode" onchange="filterData()" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <!-- Otomatis diisi Bulan -4 s/d Bulan +3 via JS -->
+        <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Periode:</label>
+        <select id="periodeSelect" onchange="renderData()" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <!-- Populated by JS -->
         </select>
       </div>
       <div class="relative w-full sm:w-72">
-        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-        <input type="text" id="search-input" onkeyup="filterData()" placeholder="Cari kegiatan, PIC, unit..." class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <input type="text" id="searchInput" oninput="renderData()" placeholder="Cari kegiatan, PIC, unit..." class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-9 pr-3 py-1.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <svg class="w-4 h-4 text-slate-500 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
       </div>
     </div>
 
-    <!-- Analytics Dashboard: Pie Chart & Distribusi Personel -->
+    <!-- Grid: Chart & Distribusi Tugas -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      
-      <!-- Chart Sebaran Unit (5/12) -->
-      <div class="lg:col-span-5 bg-slate-800 p-5 rounded-xl border border-slate-700">
-        <h3 class="text-xs font-bold uppercase text-slate-400 mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-chart-pie text-indigo-400"></i> Sebaran Order Per Unit
-        </h3>
-        <div class="relative h-56 flex items-center justify-center">
+      <!-- Sebaran Order Per Unit (Left) -->
+      <div class="lg:col-span-5 bg-slate-800/80 rounded-xl p-5 border border-slate-700 flex flex-col justify-between">
+        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path></svg>
+          Sebaran Order Per Unit
+        </h2>
+        <div class="relative flex items-center justify-center min-h-[200px]">
           <canvas id="unitChart"></canvas>
         </div>
       </div>
 
-      <!-- Distribusi Tugas Personel (7/12) -->
-      <div class="lg:col-span-7 bg-slate-800 p-5 rounded-xl border border-slate-700">
-        <h3 class="text-xs font-bold uppercase text-slate-400 mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-users text-indigo-400"></i> Distribusi Tugas Personel
-        </h3>
-        <div id="personnel-stats-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <!-- Stat kartu personel diisi via JS -->
+      <!-- Distribusi Tugas Personel (Right) -->
+      <div class="lg:col-span-7 bg-slate-800/80 rounded-xl p-5 border border-slate-700">
+        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          Distribusi Tugas Personel
+        </h2>
+        <div id="personelSummaryGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <!-- Populated by JS -->
         </div>
       </div>
-
     </div>
 
-    <!-- Section Daftar Order Masuk -->
-    <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-lg">
-      <div class="px-5 py-4 border-b border-slate-700 flex items-center justify-between">
-        <h3 class="font-bold text-sm text-white flex items-center gap-2">
-          <i class="fa-solid fa-list-check text-indigo-400"></i> Daftar Order Masuk
-        </h3>
-        <span id="order-count-badge" class="text-xs bg-indigo-900/60 text-indigo-300 border border-indigo-700/50 px-2.5 py-0.5 rounded-full">0 Order</span>
+    <!-- Daftar Order Masuk -->
+    <div class="bg-slate-800/80 rounded-xl border border-slate-700 overflow-hidden">
+      <div class="p-4 border-b border-slate-700 flex items-center justify-between">
+        <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+          Daftar Order Masuk
+        </h2>
+        <span id="orderCountBadge" class="bg-indigo-900/60 text-indigo-300 text-xs font-semibold px-2.5 py-1 rounded-full border border-indigo-700">0 Order</span>
       </div>
 
-      <!-- Loading State -->
-      <div id="loading" class="text-center py-12">
-        <i class="fa-solid fa-spinner fa-spin text-3xl text-indigo-500 mb-2"></i>
-        <p class="text-slate-400 text-xs">Memuat data respon...</p>
-      </div>
-
-      <!-- Container Tabel / Kartu Order -->
-      <div id="cards-container" class="p-5 space-y-4 hidden"></div>
-
-      <!-- Empty State -->
-      <div id="empty-state" class="text-center py-12 hidden">
-        <i class="fa-solid fa-folder-open text-3xl text-slate-600 mb-2"></i>
-        <p class="text-slate-400 text-xs">Tidak ada data penugasan pada periode ini.</p>
+      <div id="orderListContainer" class="p-4 space-y-4">
+        <!-- Cards Populated by JS -->
       </div>
     </div>
 
   </main>
 
-  <!-- MODAL: INPUT ORDER MENDADAK -->
-  <div id="mendadak-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-    <div class="bg-slate-900 border border-amber-500/30 rounded-xl p-6 w-full max-w-lg shadow-2xl space-y-4">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h4 class="font-bold text-amber-400 text-base flex items-center gap-2">
-          <i class="fa-solid fa-bolt"></i> Log Mandiri Order Mendadak
-        </h4>
-        <button onclick="closeMendadakModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+  <!-- MODAL: KUNCI KEAMANAN KASIE -->
+  <div id="pinModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl text-center space-y-4">
+      <div class="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto border border-amber-500/20">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
       </div>
-
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block text-slate-400 mb-1">Nama Kegiatan <span class="text-rose-400">*</span></label>
-          <input type="text" id="m-kegiatan" placeholder="Contoh: Liputan Kunjungan Tamu" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-amber-500">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-slate-400 mb-1">Unit <span class="text-rose-400">*</span></label>
-            <select id="m-unit" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white">
-              <option value="TK">TK</option>
-              <option value="SD">SD</option>
-              <option value="SMP">SMP</option>
-              <option value="SMA">SMA</option>
-              <option value="CHAPLAIN">CHAPLAIN</option>
-              <option value="SDM">SDM</option>
-              <option value="UMUM - HUMAS">UMUM - HUMAS</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Tanggal Pelaksanaan <span class="text-rose-400">*</span></label>
-            <input type="date" id="m-tgl" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-slate-400 mb-1">Waktu / Jam Kegiatan</label>
-            <input type="time" id="m-waktu" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">PIC Kegiatan (Nama & No HP)</label>
-            <input type="text" id="m-pic" placeholder="Contoh: Leo - 082113866890" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-slate-400 mb-1">Kategori / Jenis Pekerjaan</label>
-          <input type="text" id="m-kategori" placeholder="Contoh: Ekspedisi Camp / Desain Grafis" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white">
-        </div>
-
-        <div>
-          <label class="block text-slate-400 mb-1">Penjelasan Tugas / Details</label>
-          <textarea id="m-detail" rows="2" placeholder="Tuliskan instruksi atau detail kegiatan..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white"></textarea>
-        </div>
-
-        <div>
-          <label class="block text-slate-400 mb-1">Personel Bertugas:</label>
-          <div id="m-personnel-checkboxes" class="flex flex-wrap gap-2 pt-1"></div>
-        </div>
-      </div>
-
-      <div class="flex gap-2 pt-2 border-t border-slate-800">
-        <button onclick="closeMendadakModal()" class="w-1/2 bg-slate-800 text-slate-300 py-2 rounded-lg text-xs font-semibold">Batal</button>
-        <button onclick="submitOrderMendadak()" id="btn-submit-mendadak" class="w-1/2 bg-amber-600 text-white py-2 rounded-lg text-xs font-semibold">Simpan Log Mandiri</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL PIN KASIE -->
-  <div id="pin-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-    <div class="bg-slate-900 border border-slate-700 rounded-xl p-6 w-full max-w-sm shadow-2xl">
-      <div class="text-center mb-4">
-        <div class="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-2 border border-amber-500/20">
-          <i class="fa-solid fa-lock text-xl"></i>
-        </div>
-        <h4 class="font-bold text-white text-base">KUNCI KEAMANAN KASIE</h4>
+      <div>
+        <h3 class="text-base font-bold text-white uppercase tracking-wider">Kunci Keamanan Kasie</h3>
         <p class="text-xs text-slate-400 mt-1">Masukkan PIN rahasia untuk mengubah penugasan:</p>
       </div>
-
-      <input type="password" id="pin-input" placeholder="PIN" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-center text-lg font-mono tracking-widest text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4">
-
-      <div class="flex gap-2">
-        <button onclick="closePinModal()" class="w-1/2 bg-slate-800 text-slate-300 py-2 rounded-lg text-xs font-semibold">Batal</button>
-        <button onclick="verifyPin()" class="w-1/2 bg-indigo-600 text-white py-2 rounded-lg text-xs font-semibold">OK</button>
+      <input type="password" id="pinInput" placeholder="••••••••" class="w-full text-center tracking-widest text-lg bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      <div class="flex gap-3 pt-2">
+        <button onclick="closePinModal()" class="w-1/2 bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm font-medium py-2.5 rounded-xl transition">Batal</button>
+        <button onclick="submitPin()" class="w-1/2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold py-2.5 rounded-xl shadow-lg transition">OK</button>
       </div>
     </div>
   </div>
 
-  <!-- Toast Notif -->
-  <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-opacity duration-300 opacity-0 pointer-events-none z-50">
-    <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
-    <span id="toast-msg" class="text-xs font-medium">Berhasil!</span>
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none z-50">
+    <span id="toastMsg" class="text-sm"></span>
   </div>
 
+  <!-- JavaScript Logic -->
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzEJIqtNYNEKJ2My8aApMeO4NzCy23oH8H1n3F1_tuYo_6yf8iToUWIrJ87JPqzQYJQ/exec";
-    
-    const KASIE_PIN = "yesi123"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_xCKxRuEXBsyCtx_yAp91YIwiUUUW8_UNIkXgbS0f9qeQXZ-n77xete6RpIxNVwYZ/exec";
+    const KASIE_PIN = "yesi123";
     const TEAM_MEMBERS = ["Magang", "Dodai", "Nia", "Wahyu", "Yesi", "Indri"];
     const INDO_MONTHS = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
     let allData = [];
     let pendingAction = null;
     let unitChartInstance = null;
+    let isUnlocked = false;
 
     document.addEventListener("DOMContentLoaded", () => {
       initPeriodeDropdown();
       loadData();
-      renderMendadakPersonelCheckboxes();
     });
 
-    // 1. DROPDOWN PERIODE DINAMIS
     function initPeriodeDropdown() {
-      const select = document.getElementById("filter-periode");
+      const select = document.getElementById("periodeSelect");
       select.innerHTML = "";
-
-      const now = new Date();
-
-      const optAll = document.createElement("option");
-      optAll.value = "";
-      optAll.textContent = "Semua Periode";
-      select.appendChild(optAll);
-
-      for (let i = -4; i <= 3; i++) {
-        const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
-        const label = `${INDO_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+      
+      // Default generate 12 bulan untuk tahun 2026
+      INDO_MONTHS.forEach(m => {
         const opt = document.createElement("option");
-        opt.value = label;
-        opt.textContent = label;
-        if (i === 0) opt.selected = true; // Auto select bulan berjalan
+        opt.value = `${m} 2026`;
+        opt.textContent = `${m} 2026`;
         select.appendChild(opt);
+      });
+      select.value = "Agustus 2026";
+    }
+
+    async function loadData() {
+      showToast("Memuat data...");
+      try {
+        const res = await fetch(SCRIPT_URL);
+        allData = await res.json();
+        renderData();
+        showToast("Data berhasil diperbarui!");
+      } catch (err) {
+        console.error("Gagal memuat data:", err);
+        showToast("Gagal mengambil data!", true);
       }
     }
 
-    // 2. PARSER TANGGAL DAN JAM MULTI-FORMAT (Menangani "19 Agustus 2026, Pk 07.00")
     function parseTglDanWaktu(rawStr) {
       if (!rawStr) return { dateObj: null, timeStr: "07:00 AM", bulanTahun: "", tglFormatted: "-" };
 
       const str = String(rawStr).trim();
-      
       const monthMap = {
-        'januari': 0, 'jan': 0, 'january': 0,
-        'februari': 1, 'feb': 1, 'february': 1,
-        'maret': 2, 'mar': 2, 'march': 2,
-        'april': 3, 'apr': 3,
+        'jan': 0, 'januari': 0, 'january': 0,
+        'feb': 1, 'februari': 1, 'february': 1,
+        'mar': 2, 'maret': 2, 'march': 2,
+        'apr': 3, 'april': 3,
         'mei': 4, 'may': 4,
-        'juni': 5, 'jun': 5, 'june': 5,
-        'juli': 6, 'jul': 6, 'july': 6,
-        'agustus': 7, 'agu': 7, 'aug': 7, 'august': 7,
-        'september': 8, 'sep': 8,
-        'oktober': 9, 'okt': 9, 'oct': 9, 'october': 9,
-        'november': 10, 'nov': 10,
-        'desember': 11, 'des': 11, 'dec': 11, 'december': 11
+        'jun': 5, 'juni': 5, 'june': 5,
+        'jul': 6, 'juli': 6, 'july': 6,
+        'agu': 7, 'agustus': 7, 'aug': 7, 'august': 7,
+        'sep': 8, 'september': 8,
+        'okt': 9, 'oktober': 9, 'oct': 9, 'october': 9,
+        'nov': 10, 'november': 10,
+        'des': 11, 'desember': 11, 'dec': 11, 'december': 11
       };
 
-      let dateObj = null;
-      let timeStr = "07:00 AM";
+      let day = null, monthIdx = null, year = null;
 
-      // 1. Ekstrak Tanggal (Contoh: "19 Agustus 2026")
+      // Match format teks: "19 Agustus 2026, Pk 07.00"
       const mText = str.match(/(\d{1,2})[\s\-\/\.]+([a-zA-Z]+)[\s\-\/\.]+(\d{4})/);
       if (mText) {
-        const day = parseInt(mText[1], 10);
+        day = parseInt(mText[1], 10);
         const mStr = mText[2].toLowerCase();
-        const year = parseInt(mText[3], 10);
-        if (monthMap[mStr] !== undefined) {
-          dateObj = new Date(year, monthMap[mStr], day);
-        }
-      } else {
-        // Fallback format ISO YYYY-MM-DD
+        year = parseInt(mText[3], 10);
+        if (monthMap[mStr] !== undefined) monthIdx = monthMap[mStr];
+      }
+
+      // Match format numerik: ISO "2026-08-19" atau "19/08/2026"
+      if (monthIdx === null) {
         const mIso = str.match(/(\d{4})[\-\/](\d{1,2})[\-\/](\d{1,2})/);
         if (mIso) {
-          dateObj = new Date(parseInt(mIso[1]), parseInt(mIso[2]) - 1, parseInt(mIso[3]));
+          year = parseInt(mIso[1], 10);
+          monthIdx = parseInt(mIso[2], 10) - 1;
+          day = parseInt(mIso[3], 10);
         } else {
-          // Fallback format numerik DD/MM/YYYY
           const mNum = str.match(/(\d{1,2})[\-\/](\d{1,2})[\-\/](\d{4})/);
           if (mNum) {
-            dateObj = new Date(parseInt(mNum[3]), parseInt(mNum[2]) - 1, parseInt(mNum[1]));
+            day = parseInt(mNum[1], 10);
+            monthIdx = parseInt(mNum[2], 10) - 1;
+            year = parseInt(mNum[3], 10);
           }
         }
       }
 
-      // 2. Ekstrak Jam (Contoh: "Pk 07.00", "07:00", "Jam 13.30")
+      // Format Jam
+      let timeStr = "08:00 AM";
       const mTime = str.match(/(?:pk\.?|jam)?\s*(\d{1,2})[\:\.](\d{2})/i);
       if (mTime) {
         let hh = parseInt(mTime[1], 10);
@@ -308,471 +232,298 @@
         timeStr = `${String(hh).padStart(2, '0')}:${mm} ${ampm}`;
       }
 
-      const bulanTahun = dateObj ? `${INDO_MONTHS[dateObj.getMonth()]} ${dateObj.getFullYear()}` : "";
-      const tglFormatted = dateObj ? `${dateObj.getDate()} ${INDO_MONTHS[dateObj.getMonth()]} ${dateObj.getFullYear()}` : str;
-
-      return { dateObj, timeStr, bulanTahun, tglFormatted };
-    }
-
-    // 3. NORMALISASI DATA & DOKTER AUTO-FIX PIC vs KATEGORI
-    function normalizeItemData(item) {
-      const rawDateSource = item.rawTglWaktu || item.tgl || item.tglFormatted || item.tanggal || item.detail || "";
-      const parsed = parseTglDanWaktu(rawDateSource);
-
-      let picRaw = (item.pic || '').trim();
-      let katRaw = (item.jenisKerja || item.kategori || '').trim();
-
-      // Cek jika No HP/PIC tertukar di kolom Kategori
-      const hasPhoneInKat = /(?:08|\+?62)\d{7,}/.test(katRaw);
-      const hasPhoneInPic = /(?:08|\+?62)\d{7,}/.test(picRaw);
-
-      let finalPic = picRaw;
-      let finalKat = katRaw;
-
-      if (hasPhoneInKat && !hasPhoneInPic) {
-        finalPic = katRaw;
-        finalKat = picRaw;
+      if (monthIdx !== null && monthIdx >= 0 && monthIdx <= 11 && year) {
+        const bulanTahun = `${INDO_MONTHS[monthIdx]} ${year}`;
+        const tglFormatted = day ? `${day} ${INDO_MONTHS[monthIdx]} ${year}` : bulanTahun;
+        return { timeStr, bulanTahun, tglFormatted };
       }
 
-      return {
-        ...item,
-        pic: finalPic,
-        kategori: finalKat,
-        tglFormatted: parsed.tglFormatted,
-        waktu: item.waktu || parsed.timeStr,
-        bulanTahun: parsed.bulanTahun || item.bulanTahun,
-        parsedDateObj: parsed.dateObj
-      };
+      return { timeStr, bulanTahun: "", tglFormatted: str };
     }
 
-    async function loadData() {
-      const loading = document.getElementById("loading");
-      const cardsContainer = document.getElementById("cards-container");
-      const emptyState = document.getElementById("empty-state");
-      const refreshIcon = document.getElementById("refresh-icon");
-
-      refreshIcon.classList.add("fa-spin");
-      loading.classList.remove("hidden");
-      cardsContainer.classList.add("hidden");
-      emptyState.classList.add("hidden");
-
-      try {
-        const response = await fetch(SCRIPT_URL);
-        const rawData = await response.json();
-        
-        allData = rawData.map(normalizeItemData);
-
-        detectScheduleConflicts();
-        filterData();
-      } catch (err) {
-        showToast("Gagal memuat data", false);
-        console.error(err);
-      } finally {
-        loading.classList.add("hidden");
-        refreshIcon.classList.remove("fa-spin");
-      }
-    }
-
-    // DETEKSI BENTROK JADWAL
-    function detectScheduleConflicts() {
-      allData.forEach(item => {
-        item.isConflict = false;
-        item.conflictWith = [];
-      });
-
-      for (let i = 0; i < allData.length; i++) {
-        for (let j = i + 1; j < allData.length; j++) {
-          const a = allData[i];
-          const b = allData[j];
-
-          if (a.tglFormatted && b.tglFormatted && a.tglFormatted === b.tglFormatted) {
-            const sharedPersonnel = (a.petugas || []).filter(p => (b.petugas || []).includes(p));
-
-            if (sharedPersonnel.length > 0) {
-              a.isConflict = true;
-              b.isConflict = true;
-              a.conflictWith.push(`${b.kegiatan} (${sharedPersonnel.join(", ")})`);
-              b.conflictWith.push(`${a.kegiatan} (${sharedPersonnel.join(", ")})`);
-            }
-          }
-        }
-      }
-    }
-
-    function filterData() {
-      const searchVal = document.getElementById("search-input").value.toLowerCase();
-      const periodeVal = document.getElementById("filter-periode").value.trim().toLowerCase();
+    function renderData() {
+      const activePeriode = document.getElementById("periodeSelect").value;
+      const searchKeyword = document.getElementById("searchInput").value.toLowerCase().trim();
 
       const filtered = allData.filter(item => {
-        const matchSearch = item.kegiatan.toLowerCase().includes(searchVal) ||
-                            (item.pic && item.pic.toLowerCase().includes(searchVal)) ||
-                            (item.kategori && item.kategori.toLowerCase().includes(searchVal)) ||
-                            item.unit.toLowerCase().includes(searchVal);
+        const parsed = parseTglDanWaktu(item.rawTglWaktu);
+        const matchPeriode = parsed.bulanTahun === activePeriode || (!parsed.bulanTahun && activePeriode === "Agustus 2026");
+        
+        const matchSearch = !searchKeyword || 
+          item.kegiatan.toLowerCase().includes(searchKeyword) ||
+          item.pic.toLowerCase().includes(searchKeyword) ||
+          item.unit.toLowerCase().includes(searchKeyword);
 
-        let matchPeriode = false;
-        if (!periodeVal) {
-          matchPeriode = true;
-        } else {
-          const itemBT = (item.bulanTahun || '').trim().toLowerCase();
-          if (itemBT === periodeVal) {
-            matchPeriode = true;
-          } else if (item.parsedDateObj) {
-            const computedBT = `${INDO_MONTHS[item.parsedDateObj.getMonth()]} ${item.parsedDateObj.getFullYear()}`.toLowerCase();
-            if (computedBT === periodeVal) matchPeriode = true;
-          }
-        }
-
-        return matchSearch && matchPeriode;
+        return matchPeriode && matchSearch;
       });
 
-      document.getElementById("order-count-badge").innerText = `${filtered.length} Order`;
-      renderCards(filtered);
-      updateAnalytics(filtered);
+      renderChart(filtered);
+      renderPersonelSummary(filtered);
+      renderOrderList(filtered);
     }
 
-    function updateAnalytics(dataToUse) {
+    function renderPersonelSummary(filteredData) {
+      const summaryGrid = document.getElementById("personelSummaryGrid");
+      summaryGrid.innerHTML = "";
+
+      TEAM_MEMBERS.forEach(member => {
+        let total = 0, done = 0, progress = 0;
+
+        filteredData.forEach(item => {
+          if (item.petugas && item.petugas.includes(member)) {
+            total++;
+            if (item.status === "Selesai") done++;
+            else progress++;
+          }
+        });
+
+        summaryGrid.innerHTML += `
+          <div class="bg-slate-900/60 border border-slate-700/70 rounded-xl p-3 flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-200 uppercase">${member}</span>
+              <span class="text-xs font-semibold text-slate-400">${total} TUGAS</span>
+            </div>
+            <div class="flex items-center gap-3 mt-2 text-xs font-semibold">
+              <span class="text-emerald-400 flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                ${done}
+              </span>
+              <span class="text-amber-400 flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                ${progress}
+              </span>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function renderChart(filteredData) {
       const unitCounts = {};
-      dataToUse.forEach(d => {
-        const u = d.unit || "Lainnya";
+      filteredData.forEach(item => {
+        const u = item.unit || "Lainnya";
         unitCounts[u] = (unitCounts[u] || 0) + 1;
       });
+
+      const labels = Object.keys(unitCounts);
+      const dataValues = Object.values(unitCounts);
 
       const ctx = document.getElementById("unitChart").getContext("2d");
       if (unitChartInstance) unitChartInstance.destroy();
 
+      if (labels.length === 0) {
+        return;
+      }
+
       unitChartInstance = new Chart(ctx, {
         type: 'pie',
         data: {
-          labels: Object.keys(unitCounts),
+          labels: labels,
           datasets: [{
-            data: Object.values(unitCounts),
-            backgroundColor: ['#2563eb', '#059669', '#d97706', '#dc2626', '#7c3aed', '#db2777', '#0891b2', '#4b5563'],
-            borderWidth: 2,
-            borderColor: '#1e293b'
+            data: dataValues,
+            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#6366f1']
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 } } } }
+          plugins: {
+            legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 11 } } }
+          }
         }
       });
-
-      const personnelGrid = document.getElementById("personnel-stats-grid");
-      personnelGrid.innerHTML = TEAM_MEMBERS.map(member => {
-        let total = 0, done = 0, inProgress = 0;
-        dataToUse.forEach(item => {
-          if (item.petugas && item.petugas.includes(member)) {
-            total++;
-            if (item.status === "Done") done++;
-            else inProgress++;
-          }
-        });
-        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-
-        return `
-          <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/60">
-            <div class="flex items-center justify-between mb-1">
-              <span class="font-bold text-xs uppercase text-slate-200">${member}</span>
-              <span class="text-xs font-bold text-indigo-400">${total} TUGAS</span>
-            </div>
-            <div class="flex items-center gap-3 text-[11px] text-slate-400 mb-1.5">
-              <span><i class="fa-solid fa-square-check text-emerald-400 me-1"></i>${done}</span>
-              <span><i class="fa-solid fa-hourglass-half text-amber-400 me-1"></i>${inProgress}</span>
-            </div>
-            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-              <div class="bg-emerald-500 h-1.5 rounded-full" style="width: ${pct}%"></div>
-            </div>
-          </div>
-        `;
-      }).join('');
     }
 
-    function renderCards(data) {
-      const cardsContainer = document.getElementById("cards-container");
-      const emptyState = document.getElementById("empty-state");
+    function renderOrderList(filteredData) {
+      const container = document.getElementById("orderListContainer");
+      document.getElementById("orderCountBadge").textContent = `${filteredData.length} Order`;
+      container.innerHTML = "";
 
-      if (data.length === 0) {
-        cardsContainer.classList.add("hidden");
-        emptyState.classList.remove("hidden");
+      if (filteredData.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-slate-500">
+            <svg class="w-12 h-12 mx-auto mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+            Tidak ada data penugasan pada periode ini.
+          </div>
+        `;
         return;
       }
 
-      emptyState.classList.add("hidden");
-      cardsContainer.classList.remove("hidden");
+      filteredData.forEach(item => {
+        const parsed = parseTglDanWaktu(item.rawTglWaktu);
 
-      cardsContainer.innerHTML = data.map(item => {
-        const isDone = item.status === "Done";
-        const isPending = item.status === "Pending Approval";
-        const waktuStr = item.waktu || "07:00 AM";
+        const memberButtons = TEAM_MEMBERS.map(member => {
+          const isSelected = item.petugas && item.petugas.includes(member);
+          return `
+            <button 
+              onclick="requestPetugasToggle(${item.rowId}, '${member}')"
+              class="px-2.5 py-1 rounded-md text-xs font-medium transition ${
+                isSelected 
+                  ? 'bg-indigo-600 text-white font-bold shadow' 
+                  : 'bg-slate-700/60 text-slate-300 hover:bg-slate-600'
+              }">
+              ${member}
+            </button>
+          `;
+        }).join("");
 
-        return `
-          <div class="bg-slate-900 rounded-xl border ${item.isConflict ? 'border-rose-500/80 ring-1 ring-rose-500/30' : 'border-slate-700/80'} p-4 flex flex-col md:flex-row gap-4 justify-between items-start hover:border-slate-600 transition">
-            
-            <!-- Kolom 1: TGL / WAKTU / UNIT -->
-            <div class="w-full md:w-40 flex-shrink-0 space-y-1">
-              <div class="font-bold text-sm text-indigo-300">${escapeHtml(item.tglFormatted)}</div>
-              <div class="text-[11px] text-amber-400 font-mono"><i class="fa-regular fa-clock me-1"></i>${escapeHtml(waktuStr)}</div>
-              <div class="text-[11px] font-semibold text-slate-400 uppercase">${escapeHtml(item.unit)}</div>
-
-              ${item.isConflict ? `
-                <div class="mt-2 text-[10px] bg-rose-500/20 text-rose-300 border border-rose-500/50 p-1.5 rounded font-bold">
-                  <i class="fa-solid fa-triangle-exclamation text-rose-400 me-1"></i>BENTROK JADWAL!
+        container.innerHTML += `
+          <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-4 space-y-3">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              
+              <!-- Tanggal & Judul -->
+              <div class="space-y-1">
+                <div class="flex items-center gap-2 text-xs font-semibold text-indigo-400">
+                  <span>${parsed.tglFormatted}</span>
+                  <span>•</span>
+                  <span>${parsed.timeStr}</span>
+                  <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700 ml-1">${item.unit}</span>
                 </div>
-              ` : ''}
-            </div>
-
-            <!-- Kolom 2: DETAIL KEGIATAN & PIC -->
-            <div class="w-full md:w-5/12 space-y-2">
-              <div>
-                <h4 class="font-bold text-white text-base leading-snug">${escapeHtml(item.kegiatan)}</h4>
-                <p class="text-xs text-slate-300 font-medium mt-0.5">
-                  <i class="fa-solid fa-user-tag text-indigo-400 me-1"></i>PIC: <span class="text-indigo-200 font-semibold">${escapeHtml(item.pic || '-')}</span>
-                </p>
+                <h3 class="text-base font-bold text-white">${item.kegiatan}</h3>
+                <p class="text-xs text-slate-400">PIC: ${item.pic}</p>
               </div>
 
-              <!-- Accordion Detail -->
+              <!-- Action Status -->
               <div>
-                <button onclick="toggleDetail('detail-${item.rowId}')" class="text-[11px] text-indigo-400 hover:text-indigo-300 font-bold flex items-center gap-1 focus:outline-none">
-                  LIHAT DETAIL <i class="fa-solid fa-chevron-down text-[9px]" id="icon-detail-${item.rowId}"></i>
-                </button>
-                
-                <div id="detail-${item.rowId}" class="hidden mt-2 bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs text-slate-300 space-y-2">
-                  <p class="leading-relaxed"><strong>Penjelasan Tugas:</strong><br>${escapeHtml(item.detail || 'Tidak ada catatan detail.')}</p>
-                  ${item.kategori ? `<p class="text-[11px] text-slate-400 border-t border-slate-800 pt-1.5"><strong>Kategori:</strong> ${escapeHtml(item.kategori)}</p>` : ''}
-                </div>
+                <select 
+                  onchange="requestStatusChange(${item.rowId}, this.value)"
+                  class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-semibold ${item.status === 'Selesai' ? 'text-emerald-400 border-emerald-800' : 'text-amber-400 border-amber-800'} focus:outline-none">
+                  <option value="In Progress" ${item.status !== 'Selesai' ? 'selected' : ''}>⌛ In Progress</option>
+                  <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
+                </select>
               </div>
             </div>
 
-            <!-- Kolom 3: PILIH PERSONEL -->
-            <div class="w-full md:w-1/3">
-              <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">PILIH PERSONEL:</label>
+            <!-- Detail Tugas -->
+            <div class="bg-slate-950/40 p-3 rounded-lg border border-slate-800 text-xs space-y-1">
+              <p class="text-slate-300"><span class="font-bold text-slate-400">Penjelasan Tugas:</span> ${item.detail}</p>
+              <p class="text-slate-400"><span class="font-bold text-slate-500">Kategori:</span> ${item.kategori}</p>
+            </div>
+
+            <!-- Pilih Personel -->
+            <div class="pt-1 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pilih Personel:</span>
               <div class="flex flex-wrap gap-1.5">
-                ${TEAM_MEMBERS.map(m => {
-                  const active = item.petugas && item.petugas.includes(m);
-                  return `
-                    <button onclick="requestTogglePersonel(${item.rowId}, '${m}')" class="personnel-tag px-2.5 py-1 rounded-md text-xs font-medium border ${active ? 'active' : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700'}">
-                      ${m}
-                    </button>
-                  `;
-                }).join('')}
+                ${memberButtons}
               </div>
             </div>
-
-            <!-- Kolom 4: STATUS -->
-            <div class="w-full md:w-32 flex-shrink-0 flex items-center md:justify-end">
-              <select onchange="requestStatusChange(${item.rowId}, this.value)" class="w-full bg-slate-950 border border-slate-700 text-xs font-semibold ${isDone ? 'text-emerald-400' : isPending ? 'text-amber-400' : 'text-indigo-400'} rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="Pending Approval" ${isPending ? 'selected' : ''}>⚠️ Pending Approval</option>
-                <option value="In Progress" ${(!isDone && !isPending) ? 'selected' : ''}>⏳ In Progress</option>
-                <option value="Done" ${isDone ? 'selected' : ''}>✅ Done</option>
-              </select>
-            </div>
-
           </div>
         `;
-      }).join('');
+      });
     }
 
-    function toggleDetail(id) {
-      const el = document.getElementById(id);
-      const icon = document.getElementById("icon-" + id);
-      if (el.classList.contains("hidden")) {
-        el.classList.remove("hidden");
-        icon.className = "fa-solid fa-chevron-up text-[9px]";
-      } else {
-        el.classList.add("hidden");
-        icon.className = "fa-solid fa-chevron-down text-[9px]";
-      }
-    }
-
-    // HANDLERS & PIN KASIE
-    function requestTogglePersonel(rowId, memberName) {
-      pendingAction = () => {
-        const item = allData.find(d => d.rowId === rowId);
-        if (!item) return;
-
-        let current = item.petugas || [];
-        if (current.includes(memberName)) {
-          current = current.filter(m => m !== memberName);
-        } else {
-          current.push(memberName);
-        }
-
-        saveAssignment(rowId, current, item.status);
-      };
-      openPinModal();
+    /* Guard System PIN */
+    function requestPetugasToggle(rowId, namaPersonel) {
+      executeWithPin(() => togglePetugas(rowId, namaPersonel));
     }
 
     function requestStatusChange(rowId, newStatus) {
-      pendingAction = () => {
-        const item = allData.find(d => d.rowId === rowId);
-        if (!item) return;
-        saveAssignment(rowId, item.petugas || [], newStatus);
-      };
-      openPinModal();
+      executeWithPin(() => updateStatus(rowId, newStatus));
     }
 
-    function openPinModal() {
-      document.getElementById("pin-input").value = "";
-      document.getElementById("pin-modal").classList.remove("hidden");
-      document.getElementById("pin-input").focus();
+    function executeWithPin(actionFn) {
+      if (isUnlocked) {
+        actionFn();
+      } else {
+        pendingAction = actionFn;
+        document.getElementById("pinModal").classList.remove("hidden");
+        document.getElementById("pinInput").focus();
+      }
+    }
+
+    function submitPin() {
+      const input = document.getElementById("pinInput").value.trim().toLowerCase();
+      if (input === KASIE_PIN.toLowerCase()) {
+        isUnlocked = true;
+        closePinModal();
+        if (pendingAction) {
+          pendingAction();
+          pendingAction = null;
+        }
+        showToast("Akses Kasie Diberikan!");
+      } else {
+        showToast("PIN Rahasia Salah!", true);
+      }
     }
 
     function closePinModal() {
-      document.getElementById("pin-modal").classList.add("hidden");
-      pendingAction = null;
+      document.getElementById("pinModal").classList.add("hidden");
+      document.getElementById("pinInput").value = "";
     }
 
-    function verifyPin() {
-      if (document.getElementById("pin-input").value === KASIE_PIN) {
-        closePinModal();
-        if (pendingAction) pendingAction();
-      } else {
-        showToast("PIN Rahasia Salah!", false);
-      }
-    }
+    async function togglePetugas(rowId, namaPersonel) {
+      const item = allData.find(d => d.rowId === rowId);
+      if (!item) return;
 
-    async function saveAssignment(rowId, petugasArray, statusVal) {
-      try {
-        await fetch(SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ rowId: rowId, petugasList: petugasArray, status: statusVal })
-        });
+      if (!item.petugas) item.petugas = [];
+      const idx = item.petugas.indexOf(namaPersonel);
+      if (idx > -1) item.petugas.splice(idx, 1);
+      else item.petugas.push(namaPersonel);
 
-        const idx = allData.findIndex(d => d.rowId === rowId);
-        if (idx !== -1) {
-          allData[idx].petugas = petugasArray;
-          allData[idx].status = statusVal;
-        }
-
-        detectScheduleConflicts();
-        filterData();
-        showToast("Penugasan diperbarui!");
-      } catch (err) {
-        showToast("Gagal menyimpan", false);
-      }
-    }
-
-    // ORDER MENDADAK
-    function openMendadakModal() {
-      document.getElementById("m-tgl").valueAsDate = new Date();
-      document.getElementById("mendadak-modal").classList.remove("hidden");
-    }
-
-    function closeMendadakModal() {
-      document.getElementById("mendadak-modal").classList.add("hidden");
-    }
-
-    function renderMendadakPersonelCheckboxes() {
-      document.getElementById("m-personnel-checkboxes").innerHTML = TEAM_MEMBERS.map(m => `
-        <label class="flex items-center gap-1.5 bg-slate-950 border border-slate-800 px-2.5 py-1 rounded text-slate-300 cursor-pointer">
-          <input type="checkbox" value="${m}" class="m-personel-cb rounded border-slate-700 text-amber-500">
-          <span>${m}</span>
-        </label>
-      `).join('');
-    }
-
-    async function submitOrderMendadak() {
-      const kegiatan = document.getElementById("m-kegiatan").value.trim();
-      const tgl = document.getElementById("m-tgl").value;
-      if (!kegiatan || !tgl) {
-        showToast("Kegiatan & Tanggal wajib diisi!", false);
-        return;
-      }
-
-      const selectedPersonel = [];
-      document.querySelectorAll(".m-personel-cb:checked").forEach(cb => selectedPersonel.push(cb.value));
-
-      const payload = {
-        action: "ADD",
-        kegiatan: kegiatan,
-        unit: document.getElementById("m-unit").value,
-        tgl: tgl,
-        waktu: document.getElementById("m-waktu").value || "07:00 AM",
-        pic: document.getElementById("m-pic").value.trim() || "-",
-        jenisKerja: document.getElementById("m-kategori").value.trim() || "-",
-        detail: document.getElementById("m-detail").value.trim() || "-",
-        petugasList: selectedPersonel
-      };
+      renderData();
 
       try {
         await fetch(SCRIPT_URL, {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({ rowId: rowId, petugas: item.petugas })
         });
-
-        showToast("Log mendadak tersimpan!");
-        closeMendadakModal();
-        setTimeout(() => loadData(), 1200);
+        showToast("Petugas berhasil diperbarui!");
       } catch (err) {
-        showToast("Gagal menambah log", false);
+        showToast("Gagal menyimpan ke Google Sheets", true);
       }
     }
 
-    // REKAP WA GENERATOR
-    function copyRekapWA() {
-      const searchVal = document.getElementById("search-input").value.toLowerCase();
-      const periodeVal = document.getElementById("filter-periode").value;
+    async function updateStatus(rowId, newStatus) {
+      const item = allData.find(d => d.rowId === rowId);
+      if (!item) return;
 
-      const filtered = allData.filter(item => {
-        const matchSearch = item.kegiatan.toLowerCase().includes(searchVal) ||
-                            (item.pic && item.pic.toLowerCase().includes(searchVal)) ||
-                            (item.kategori && item.kategori.toLowerCase().includes(searchVal)) ||
-                            item.unit.toLowerCase().includes(searchVal);
+      item.status = newStatus;
+      renderData();
 
-        let matchPeriode = false;
-        if (!periodeVal) {
-          matchPeriode = true;
-        } else {
-          const itemBT = (item.bulanTahun || '').trim().toLowerCase();
-          if (itemBT === periodeVal.trim().toLowerCase()) {
-            matchPeriode = true;
-          } else if (item.parsedDateObj) {
-            const computedBT = `${INDO_MONTHS[item.parsedDateObj.getMonth()]} ${item.parsedDateObj.getFullYear()}`.toLowerCase();
-            if (computedBT === periodeVal.trim().toLowerCase()) matchPeriode = true;
-          }
-        }
-        return matchSearch && matchPeriode;
-      });
-
-      if (filtered.length === 0) {
-        showToast("Tidak ada data untuk direkap", false);
-        return;
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ rowId: rowId, status: newStatus })
+        });
+        showToast("Status berhasil diperbarui!");
+      } catch (err) {
+        showToast("Gagal menyimpan ke Google Sheets", true);
       }
-
-      let text = `*REKAP PENUGASAN TIM PUBLIKASI*\n*Periode: ${periodeVal || "SEMUA PERIODE"}*\n----------------------------------------\n\n`;
-
-      filtered.forEach((item, index) => {
-        const petugasStr = item.petugas && item.petugas.length > 0 ? item.petugas.join(", ") : "_Belum ada_";
-        const statusIcon = item.status === "Done" ? "✅ Done" : "⏳ In Progress";
-
-        text += `${index + 1}. *${item.kegiatan}* (${item.unit})\n`;
-        text += `   📅 ${item.tglFormatted} | 🕐 ${item.waktu || '07:00 AM'}\n`;
-        text += `   👤 PIC: ${item.pic || '-'}\n`;
-        text += `   📂 Kategori: ${item.kategori || '-'}\n`;
-        text += `   👥 Petugas: ${petugasStr}\n`;
-        text += `   📌 Status: ${statusIcon}\n\n`;
-      });
-
-      navigator.clipboard.writeText(text).then(() => showToast("Rekap WA berhasil disalin!"));
     }
 
-    function showToast(msg, isSuccess = true) {
+    function showToast(msg, isError = false) {
       const toast = document.getElementById("toast");
-      document.getElementById("toast-msg").innerText = msg;
-      document.getElementById("toast-icon").className = isSuccess ? "fa-solid fa-circle-check text-emerald-400" : "fa-solid fa-triangle-exclamation text-rose-400";
-
+      const toastMsg = document.getElementById("toastMsg");
+      toastMsg.textContent = msg;
+      
+      toast.className = `fixed bottom-5 right-5 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 z-50 ${
+        isError ? 'bg-rose-900 border border-rose-700 text-rose-100' : 'bg-slate-800 border border-slate-700 text-white'
+      }`;
+      
       toast.classList.remove("opacity-0", "pointer-events-none");
       setTimeout(() => toast.classList.add("opacity-0", "pointer-events-none"), 3000);
     }
 
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    function copyRekapWA() {
+      const activePeriode = document.getElementById("periodeSelect").value;
+      const filtered = allData.filter(item => parseTglDanWaktu(item.rawTglWaktu).bulanTahun === activePeriode);
+
+      let text = `*REKAP PENUGASAN PUBLIKASI - ${activePeriode.toUpperCase()}*\n\n`;
+      filtered.forEach((item, i) => {
+        const p = parseTglDanWaktu(item.rawTglWaktu);
+        const petugas = item.petugas && item.petugas.length ? item.petugas.join(", ") : "-";
+        text += `${i + 1}. *${item.kegiatan}* (${item.unit})\n`;
+        text += `   📅 ${p.tglFormatted} | ⏰ ${p.timeStr}\n`;
+        text += `   👤 Petugas: ${petugas}\n`;
+        text += `   📌 Status: ${item.status}\n\n`;
+      });
+
+      navigator.clipboard.writeText(text);
+      showToast("Rekap WA berhasil disalin!");
     }
   </script>
 </body>
