@@ -3,127 +3,225 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Kontrol Penugasan Publikasi</title>
-  <!-- Tailwind CSS CDN -->
+  <title>Kontrol Penugasan Publikasi</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Google Fonts: Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Inter', sans-serif; }
-    .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    .personnel-tag { transition: all 0.15s ease-in-out; }
+    .personnel-tag.active { background-color: #1e3a8a; color: #ffffff; border-color: #1e3a8a; }
   </style>
 </head>
-<body class="bg-slate-100 min-h-screen text-slate-800 pb-12">
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-12">
 
-  <!-- Navbar -->
-  <header class="bg-indigo-900 text-white shadow-lg sticky top-0 z-30">
+  <!-- Header / Navbar -->
+  <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-30 shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="p-2 bg-indigo-700 rounded-lg">
-          <i class="fa-solid me-0 fa-clipboard-list text-xl text-indigo-200"></i>
+        <div class="p-2 bg-indigo-600 rounded-lg text-white">
+          <i class="fa-solid fa-clipboard-check text-xl"></i>
         </div>
         <div>
-          <h1 class="font-bold text-lg leading-tight">Kontrol Penugasan Publikasi</h1>
-          <p class="text-xs text-indigo-300">Sistem Managemen Brief & Brief Strategis</p>
+          <h1 class="font-bold text-lg leading-tight text-white">KONTROL PENUGASAN PUBLIKASI</h1>
+          <p class="text-xs text-slate-400">Sistem Manajemen Brief & Brief Strategis</p>
         </div>
       </div>
-      <button onclick="loadData()" class="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-600 px-3 py-1.5 rounded-lg text-sm transition">
-        <i class="fa-solid fa-rotate-right" id="refresh-icon"></i> Refresh Data
-      </button>
+      <div class="flex items-center gap-2">
+        <button onclick="openMendadakModal()" class="bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-bolt"></i> + Order Mendadak
+        </button>
+        <button onclick="copyRekapWA()" class="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-copy"></i> Copy Rekap WA
+        </button>
+        <button onclick="loadData()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-rotate-right" id="refresh-icon"></i>
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- Main Container -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
 
-    <!-- Ringkasan Statistik -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <div class="glass-card p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-        <div>
-          <p class="text-xs font-semibold uppercase text-slate-400">Total Pengajuan</p>
-          <h3 id="stat-total" class="text-2xl font-bold text-slate-800">0</h3>
-        </div>
-        <div class="p-3 bg-blue-50 text-blue-600 rounded-lg"><i class="fa-solid fa-inbox text-xl"></i></div>
+    <!-- Filter Bar: Periode & Pencarian -->
+    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <label class="text-xs font-semibold text-slate-400 uppercase">Periode:</label>
+        <select id="filter-periode" onchange="filterData()" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="">Semua Periode</option>
+        </select>
       </div>
-      <div class="glass-card p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-        <div>
-          <p class="text-xs font-semibold uppercase text-slate-400">Dalam Proses</p>
-          <h3 id="stat-progress" class="text-2xl font-bold text-amber-600">0</h3>
-        </div>
-        <div class="p-3 bg-amber-50 text-amber-600 rounded-lg"><i class="fa-solid fa-spinner text-xl"></i></div>
-      </div>
-      <div class="glass-card p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-        <div>
-          <p class="text-xs font-semibold uppercase text-slate-400">Selesai (Done)</p>
-          <h3 id="stat-done" class="text-2xl font-bold text-emerald-600">0</h3>
-        </div>
-        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg"><i class="fa-solid fa-circle-check text-xl"></i></div>
-      </div>
-      <div class="glass-card p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-        <div>
-          <p class="text-xs font-semibold uppercase text-slate-400">Logistik Mandiri</p>
-          <h3 id="stat-logistik" class="text-2xl font-bold text-purple-600">0</h3>
-        </div>
-        <div class="p-3 bg-purple-50 text-purple-600 rounded-lg"><i class="fa-solid fa-camera text-xl"></i></div>
+      <div class="relative w-full sm:w-72">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+        <input type="text" id="search-input" onkeyup="filterData()" placeholder="Cari kegiatan, PIC, unit..." class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
       </div>
     </div>
 
-    <!-- Filter & Filter Bar -->
-    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-col md:flex-row gap-3 items-center justify-between">
-      <div class="relative w-full md:w-80">
-        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-        <input type="text" id="search-input" onkeyup="filterData()" placeholder="Cari kegiatan, PIC, atau unit..." class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-      </div>
+    <!-- Analytics Dashboard: Pie Chart & Distribusi Personel -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       
-      <div class="flex flex-wrap gap-2 w-full md:w-auto">
-        <select id="filter-unit" onchange="filterData()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <option value="">Semua Unit</option>
-          <option value="TK">TK</option>
-          <option value="SD">SD</option>
-          <option value="SMP">SMP</option>
-          <option value="SMA">SMA</option>
-          <option value="General">General / Humas</option>
-        </select>
-
-        <select id="filter-status" onchange="filterData()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <option value="">Semua Status</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Done">Done</option>
-        </select>
+      <!-- Chart Sebaran Unit (5/12) -->
+      <div class="lg:col-span-5 bg-slate-800 p-5 rounded-xl border border-slate-700">
+        <h3 class="text-xs font-bold uppercase text-slate-400 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie text-indigo-400"></i> Sebaran Order Per Unit
+        </h3>
+        <div class="relative h-56 flex items-center justify-center">
+          <canvas id="unitChart"></canvas>
+        </div>
       </div>
+
+      <!-- Distribusi Tugas Personel (7/12) -->
+      <div class="lg:col-span-7 bg-slate-800 p-5 rounded-xl border border-slate-700">
+        <h3 class="text-xs font-bold uppercase text-slate-400 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-users text-indigo-400"></i> Distribusi Tugas Personel
+        </h3>
+        <div id="personnel-stats-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- Stat kartu personel diisi via JS -->
+        </div>
+      </div>
+
     </div>
 
-    <!-- Loading Indicator -->
-    <div id="loading" class="text-center py-12">
-      <i class="fa-solid fa-spinner fa-spin text-4xl text-indigo-600 mb-3"></i>
-      <p class="text-slate-500 font-medium">Memuat data respon dari Spreadsheet...</p>
-    </div>
+    <!-- Section Daftar Order Masuk -->
+    <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-lg">
+      <div class="px-5 py-4 border-b border-slate-700 flex items-center justify-between">
+        <h3 class="font-bold text-sm text-white flex items-center gap-2">
+          <i class="fa-solid fa-list-check text-indigo-400"></i> Daftar Order Masuk
+        </h3>
+        <span id="order-count-badge" class="text-xs bg-indigo-900/60 text-indigo-300 border border-indigo-700/50 px-2.5 py-0.5 rounded-full">0 Order</span>
+      </div>
 
-    <!-- Container Kartu Penugasan -->
-    <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden"></div>
+      <!-- Loading State -->
+      <div id="loading" class="text-center py-12">
+        <i class="fa-solid fa-spinner fa-spin text-3xl text-indigo-500 mb-2"></i>
+        <p class="text-slate-400 text-xs">Memuat data respon...</p>
+      </div>
 
-    <!-- Empty State -->
-    <div id="empty-state" class="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300 hidden">
-      <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-2"></i>
-      <p class="text-slate-500">Tidak ada pengajuan yang sesuai dengan filter.</p>
+      <!-- Container Kartu Order -->
+      <div id="cards-container" class="p-5 grid grid-cols-1 gap-4 hidden"></div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="text-center py-12 hidden">
+        <i class="fa-solid fa-folder-open text-3xl text-slate-600 mb-2"></i>
+        <p class="text-slate-400 text-xs">Tidak ada data penugasan pada periode/filter ini.</p>
+      </div>
     </div>
 
   </main>
 
-  <!-- Notification Toast -->
-  <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 transition-opacity duration-300 opacity-0 pointer-events-none z-50">
-    <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
-    <span id="toast-msg" class="text-sm">Berhasil disimpan!</span>
+  <!-- MODAL 1: FORM INPUT ORDER MENDADAK (PERSONEL) -->
+  <div id="mendadak-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-amber-500/30 rounded-xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h4 class="font-bold text-amber-400 text-base flex items-center gap-2">
+          <i class="fa-solid fa-bolt"></i> Log Mandiri Order Mendadak
+        </h4>
+        <button onclick="closeMendadakModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Nama Kegiatan / Liputan <span class="text-rose-400">*</span></label>
+          <input type="text" id="m-kegiatan" placeholder="Contoh: Liputan Kunjungan Tamu Dinas" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Unit Pengaju <span class="text-rose-400">*</span></label>
+            <select id="m-unit" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+              <option value="TK">TK</option>
+              <option value="SD">SD</option>
+              <option value="SMP">SMP</option>
+              <option value="SMA">SMA</option>
+              <option value="CHAPLAIN">CHAPLAIN</option>
+              <option value="SDM">SDM</option>
+              <option value="HUMAS">HUMAS</option>
+              <option value="UMUM">UMUM</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Tanggal Pelaksanaan <span class="text-rose-400">*</span></label>
+            <input type="date" id="m-tgl" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">PIC Requestor</label>
+            <input type="text" id="m-pic" placeholder="Nama PIC" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Kategori Kerja</label>
+            <input type="text" id="m-jenis" placeholder="Liputan / Design / Video" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:ring-2 focus:ring-amber-500" value="Liputan Mendadak">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Detail Singkat Kegiatan</label>
+          <textarea id="m-detail" rows="2" placeholder="Catatan atau lokasi kegiatan..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Personel yang Bertugas Saat Ini:</label>
+          <div id="m-personnel-checkboxes" class="flex flex-wrap gap-2 pt-1">
+            <!-- Filled dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2 border-t border-slate-800">
+        <button onclick="closeMendadakModal()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 rounded-lg text-xs font-semibold transition">Batal</button>
+        <button onclick="submitOrderMendadak()" id="btn-submit-mendadak" class="w-1/2 bg-amber-600 hover:bg-amber-500 text-white py-2 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1">
+          <i class="fa-solid fa-paper-plane"></i> Simpan Log Mandiri
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: PIN KEAMANAN KASIE -->
+  <div id="pin-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-xl p-6 w-full max-w-sm shadow-2xl">
+      <div class="text-center mb-4">
+        <div class="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-2 border border-amber-500/20">
+          <i class="fa-solid fa-lock text-xl"></i>
+        </div>
+        <h4 class="font-bold text-white text-base">KUNCI KEAMANAN</h4>
+        <p class="text-xs text-slate-400 mt-1">Hanya Kasie / Admin yang bisa mengesahkan penugasan. Masukkan PIN rahasia:</p>
+      </div>
+
+      <input type="password" id="pin-input" placeholder="Masukkan PIN" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-center text-lg font-mono tracking-widest text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4">
+
+      <div class="flex gap-2">
+        <button onclick="closePinModal()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 rounded-lg text-xs font-semibold transition">Batal</button>
+        <button onclick="verifyPin()" class="w-1/2 bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-lg text-xs font-semibold transition">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+    <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toast-msg" class="text-xs font-medium">Berhasil disimpan!</span>
   </div>
 
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_xCKxRuEXBsyCtx_yAp9lYIwiUUUW8_UNIkXgBs0f9qeQXZ-n77xete6RpIxNVwYZ/exec";
+    const KASIE_PIN = "1234"; // Ganti PIN Rahasia Anda di sini
+    const TEAM_MEMBERS = ["Magang", "Dodai", "Nia", "Wahyu", "Yesi", "Indri"];
+
     let allData = [];
+    let pendingAction = null;
+    let unitChartInstance = null;
 
     document.addEventListener("DOMContentLoaded", () => {
       loadData();
+      renderMendadakPersonelCheckboxes();
     });
 
     async function loadData() {
@@ -140,10 +238,12 @@
       try {
         const response = await fetch(SCRIPT_URL);
         allData = await response.json();
-        updateStats();
-        renderCards(allData);
+        
+        populatePeriodeDropdown();
+        updateAnalytics();
+        filterData();
       } catch (err) {
-        showToast("Gagal memuat data dari Spreadsheet", false);
+        showToast("Gagal memuat data", false);
         console.error(err);
       } finally {
         loading.classList.add("hidden");
@@ -151,11 +251,101 @@
       }
     }
 
-    function updateStats() {
-      document.getElementById("stat-total").innerText = allData.length;
-      document.getElementById("stat-progress").innerText = allData.filter(d => d.status === "In Progress" || !d.status).length;
-      document.getElementById("stat-done").innerText = allData.filter(d => d.status === "Done").length;
-      document.getElementById("stat-logistik").innerText = allData.filter(d => d.jenisKerja.indexOf("Logistik") !== -1).length;
+    function populatePeriodeDropdown() {
+      const select = document.getElementById("filter-periode");
+      const periodes = [...new Set(allData.map(d => d.bulanTahun).filter(Boolean))];
+      
+      const currentVal = select.value;
+      select.innerHTML = `<option value="">Semua Periode</option>` + 
+        periodes.map(p => `<option value="${p}">${p}</option>`).join("");
+      
+      if (currentVal && periodes.includes(currentVal)) {
+        select.value = currentVal;
+      }
+    }
+
+    function getFilteredData() {
+      const searchVal = document.getElementById("search-input").value.toLowerCase();
+      const periodeVal = document.getElementById("filter-periode").value;
+
+      return allData.filter(item => {
+        const matchSearch = item.kegiatan.toLowerCase().includes(searchVal) ||
+                            item.pic.toLowerCase().includes(searchVal) ||
+                            item.unit.toLowerCase().includes(searchVal);
+        const matchPeriode = !periodeVal || item.bulanTahun === periodeVal;
+        return matchSearch && matchPeriode;
+      });
+    }
+
+    function filterData() {
+      const filtered = getFilteredData();
+      document.getElementById("order-count-badge").innerText = `${filtered.length} Order`;
+      renderCards(filtered);
+      updateAnalytics(filtered);
+    }
+
+    function updateAnalytics(dataToUse = allData) {
+      // 1. Render Pie Chart Sebaran Unit
+      const unitCounts = {};
+      dataToUse.forEach(d => {
+        const u = d.unit || "Lainnya";
+        unitCounts[u] = (unitCounts[u] || 0) + 1;
+      });
+
+      const ctx = document.getElementById("unitChart").getContext("2d");
+      if (unitChartInstance) unitChartInstance.destroy();
+
+      unitChartInstance = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(unitCounts),
+          datasets: [{
+            data: Object.values(unitCounts),
+            backgroundColor: ['#2563eb', '#059669', '#d97706', '#dc2626', '#7c3aed', '#db2777', '#0891b2', '#4b5563'],
+            borderWidth: 2,
+            borderColor: '#1e293b'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 } } }
+          }
+        }
+      });
+
+      // 2. Render Distribusi Tugas Personel
+      const personnelGrid = document.getElementById("personnel-stats-grid");
+      personnelGrid.innerHTML = TEAM_MEMBERS.map(member => {
+        let total = 0, done = 0, inProgress = 0;
+
+        dataToUse.forEach(item => {
+          if (item.petugas && item.petugas.includes(member)) {
+            total++;
+            if (item.status === "Done") done++;
+            else inProgress++;
+          }
+        });
+
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+        return `
+          <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/60">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-bold text-xs uppercase text-slate-200">${member}</span>
+              <span class="text-xs font-bold text-indigo-400">${total} TUGAS</span>
+            </div>
+            <div class="flex items-center gap-3 text-[11px] text-slate-400 mb-1.5">
+              <span><i class="fa-solid fa-square-check text-emerald-400 me-1"></i>${done}</span>
+              <span><i class="fa-solid fa-hourglass-half text-amber-400 me-1"></i>${inProgress}</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+              <div class="bg-emerald-500 h-1.5 rounded-full" style="width: ${pct}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     function renderCards(data) {
@@ -173,107 +363,183 @@
 
       cardsContainer.innerHTML = data.map(item => {
         const isDone = item.status === "Done";
-        const badgeColor = isDone ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700";
-        const isLogistik = item.jenisKerja.indexOf("Logistik") !== -1;
+        const isPending = item.status === "Pending Approval";
+        const isMendadak = (item.jenisKerja && item.jenisKerja.includes("MENDADAK")) || isPending;
+
+        const cardBorder = isPending ? "border-amber-500/80 bg-amber-950/10" : "border-slate-700/80 bg-slate-900";
 
         return `
-          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-md transition">
-            <div class="p-5">
-              <!-- Top Info Header -->
-              <div class="flex items-center justify-between gap-2 mb-3">
-                <span class="px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md uppercase">
-                  ${escapeHtml(item.unit)}
-                </span>
-                <span class="text-xs text-slate-400 font-medium">
-                  <i class="fa-regular fa-calendar me-1"></i>${escapeHtml(item.tglFormatted)}
-                </span>
-              </div>
+          <div class="rounded-xl border ${cardBorder} p-4 flex flex-col md:flex-row gap-4 justify-between items-start md:items-center hover:border-slate-500 transition relative">
+            
+            <!-- Kolom 1: Tgl & Unit -->
+            <div class="w-full md:w-36 flex-shrink-0">
+              <div class="font-bold text-sm text-indigo-300">${escapeHtml(item.tglFormatted)}</div>
+              <div class="text-[11px] font-semibold text-slate-400 uppercase mt-0.5">${escapeHtml(item.unit)}</div>
+              ${isMendadak ? '<span class="inline-block mt-1 text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded font-bold"><i class="fa-solid fa-bolt me-1"></i>MENDADAK</span>' : ''}
+            </div>
 
-              <!-- Judul Kegiatan -->
-              <h4 class="font-bold text-slate-800 text-base mb-2 leading-snug">
-                ${escapeHtml(item.kegiatan)}
-              </h4>
+            <!-- Kolom 2: Detail Kegiatan -->
+            <div class="w-full md:w-1/3">
+              <h4 class="font-bold text-white text-base leading-snug">${escapeHtml(item.kegiatan)}</h4>
+              <p class="text-xs text-slate-400 mt-0.5"><i class="fa-regular fa-user me-1"></i>PIC: ${escapeHtml(item.pic)}</p>
+              <p class="text-[11px] text-slate-400 line-clamp-2 mt-2 bg-slate-950/80 p-2 rounded border border-slate-800">${escapeHtml(item.detail)}</p>
+            </div>
 
-              <!-- Jenis Pekerjaan Tag -->
-              <div class="mb-3">
-                <span class="inline-block text-xs font-medium px-2 py-0.5 rounded ${isLogistik ? 'bg-purple-100 text-purple-700' : 'bg-indigo-50 text-indigo-600'}">
-                  ${escapeHtml(item.jenisKerja)}
-                </span>
-              </div>
-
-              <!-- Detail Brief -->
-              <p class="text-xs text-slate-600 line-clamp-3 mb-4 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                ${escapeHtml(item.detail)}
-              </p>
-
-              <!-- Informational Extra for Logistik -->
-              ${isLogistik ? `
-                <div class="text-xs bg-purple-50 p-2 rounded-lg text-purple-800 mb-4 border border-purple-100">
-                  <p class="font-semibold"><i class="fa-solid fa-box me-1"></i>${escapeHtml(item.alat)}</p>
-                </div>
-              ` : ''}
-
-              <!-- PIC & Contact -->
-              <div class="text-xs text-slate-500 mb-4 flex items-center justify-between border-t pt-3">
-                <span><i class="fa-regular fa-user me-1"></i> ${escapeHtml(item.pic)}</span>
-              </div>
-
-              <!-- Form Assignment -->
-              <div class="space-y-3 pt-2 border-t border-slate-100">
-                <div>
-                  <label class="block text-xs font-semibold text-slate-500 mb-1">Petugas Tim:</label>
-                  <input type="text" id="petugas-${item.rowId}" value="${escapeHtml(item.petugas.join(', '))}" placeholder="Sebutkan nama petugas (pisahkan koma)" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                </div>
-
-                <div>
-                  <label class="block text-xs font-semibold text-slate-500 mb-1">Status Pengerjaan:</label>
-                  <select id="status-${item.rowId}" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                    <option value="In Progress" ${!isDone ? 'selected' : ''}>In Progress</option>
-                    <option value="Done" ${isDone ? 'selected' : ''}>Done</option>
-                  </select>
-                </div>
+            <!-- Kolom 3: Tag Tombol Personel -->
+            <div class="w-full md:w-1/3">
+              <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">PILIH PERSONEL:</label>
+              <div class="flex flex-wrap gap-1.5">
+                ${TEAM_MEMBERS.map(m => {
+                  const active = item.petugas && item.petugas.includes(m);
+                  return `
+                    <button onclick="requestTogglePersonel(${item.rowId}, '${m}')" class="personnel-tag px-2.5 py-1 rounded-md text-xs font-medium border ${active ? 'active' : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700'}">
+                      ${m}
+                    </button>
+                  `;
+                }).join('')}
               </div>
             </div>
 
-            <!-- Card Footer -->
-            <div class="bg-slate-50 px-5 py-3 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-xs px-2 py-0.5 rounded-full font-medium ${badgeColor}">
-                ${item.status || 'In Progress'}
-              </span>
-              <button onclick="saveAssignment(${item.rowId})" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5">
-                <i class="fa-solid fa-floppy-disk"></i> Simpan
-              </button>
+            <!-- Kolom 4: Status -->
+            <div class="w-full md:w-36 flex-shrink-0 flex flex-col md:items-end gap-1">
+              <select onchange="requestStatusChange(${item.rowId}, this.value)" class="w-full bg-slate-950 border border-slate-700 text-xs font-semibold ${isDone ? 'text-emerald-400' : isPending ? 'text-amber-400' : 'text-indigo-400'} rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="Pending Approval" ${isPending ? 'selected' : ''}>⚠️ Pending Approval</option>
+                <option value="In Progress" ${(!isDone && !isPending) ? 'selected' : ''}>⏳ In Progress</option>
+                <option value="Done" ${isDone ? 'selected' : ''}>✅ Done</option>
+              </select>
             </div>
+
           </div>
         `;
       }).join('');
     }
 
-    function filterData() {
-      const searchVal = document.getElementById("search-input").value.toLowerCase();
-      const unitVal = document.getElementById("filter-unit").value;
-      const statusVal = document.getElementById("filter-status").value;
-
-      const filtered = allData.filter(item => {
-        const matchSearch = item.kegiatan.toLowerCase().includes(searchVal) ||
-                            item.pic.toLowerCase().includes(searchVal) ||
-                            item.unit.toLowerCase().includes(searchVal) ||
-                            item.detail.toLowerCase().includes(searchVal);
-        const matchUnit = !unitVal || item.unit === unitVal;
-        const matchStatus = !statusVal || item.status === statusVal || (!item.status && statusVal === "In Progress");
-
-        return matchSearch && matchUnit && matchStatus;
-      });
-
-      renderCards(filtered);
+    // --- ORDER MENDADAK HANDLER ---
+    function openMendadakModal() {
+      document.getElementById("m-tgl").valueAsDate = new Date();
+      document.getElementById("mendadak-modal").classList.remove("hidden");
     }
 
-    async function saveAssignment(rowId) {
-      const petugasVal = document.getElementById(`petugas-${rowId}`).value;
-      const statusVal = document.getElementById(`status-${rowId}`).value;
+    function closeMendadakModal() {
+      document.getElementById("mendadak-modal").classList.add("hidden");
+    }
 
-      const petugasArray = petugasVal.split(',').map(s => s.trim()).filter(Boolean);
+    function renderMendadakPersonelCheckboxes() {
+      const container = document.getElementById("m-personnel-checkboxes");
+      container.innerHTML = TEAM_MEMBERS.map(m => `
+        <label class="flex items-center gap-1.5 bg-slate-950 border border-slate-800 px-2.5 py-1 rounded text-slate-300 cursor-pointer hover:border-slate-600">
+          <input type="checkbox" value="${m}" class="m-personel-cb rounded border-slate-700 text-amber-500 focus:ring-amber-500">
+          <span>${m}</span>
+        </label>
+      `).join('');
+    }
 
+    async function submitOrderMendadak() {
+      const kegiatan = document.getElementById("m-kegiatan").value.trim();
+      const unit = document.getElementById("m-unit").value;
+      const tgl = document.getElementById("m-tgl").value;
+      const pic = document.getElementById("m-pic").value.trim() || "Mandiri";
+      const jenis = document.getElementById("m-jenis").value.trim() || "Liputan Mendadak";
+      const detail = document.getElementById("m-detail").value.trim() || "Request mendadak di lapangan";
+
+      if (!kegiatan || !tgl) {
+        showToast("Nama kegiatan dan tanggal wajib diisi!", false);
+        return;
+      }
+
+      const selectedPersonel = [];
+      document.querySelectorAll(".m-personel-cb:checked").forEach(cb => selectedPersonel.push(cb.value));
+
+      const btn = document.getElementById("btn-submit-mendadak");
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...`;
+
+      const payload = {
+        action: "ADD",
+        kegiatan: kegiatan,
+        unit: unit,
+        tgl: tgl,
+        pic: pic,
+        jenisKerja: jenis,
+        detail: detail,
+        petugasList: selectedPersonel
+      };
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        showToast("Log mendadak berhasil dicatat!");
+        closeMendadakModal();
+        
+        // Reset form
+        document.getElementById("m-kegiatan").value = "";
+        document.getElementById("m-detail").value = "";
+        
+        setTimeout(() => loadData(), 1500); // Reload data dari spreadsheet
+      } catch (err) {
+        showToast("Gagal mencatat order mendadak", false);
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Simpan Log Mandiri`;
+      }
+    }
+
+    // --- LOGIKA PIN SECURITY KASIE ---
+    function requestTogglePersonel(rowId, memberName) {
+      pendingAction = () => {
+        const item = allData.find(d => d.rowId === rowId);
+        if (!item) return;
+
+        let current = item.petugas || [];
+        if (current.includes(memberName)) {
+          current = current.filter(m => m !== memberName);
+        } else {
+          current.push(memberName);
+        }
+
+        saveAssignment(rowId, current, item.status);
+      };
+      openPinModal();
+    }
+
+    function requestStatusChange(rowId, newStatus) {
+      pendingAction = () => {
+        const item = allData.find(d => d.rowId === rowId);
+        if (!item) return;
+        saveAssignment(rowId, item.petugas || [], newStatus);
+      };
+      openPinModal();
+    }
+
+    function openPinModal() {
+      document.getElementById("pin-input").value = "";
+      document.getElementById("pin-modal").classList.remove("hidden");
+      document.getElementById("pin-input").focus();
+    }
+
+    function closePinModal() {
+      document.getElementById("pin-modal").classList.add("hidden");
+      pendingAction = null;
+    }
+
+    function verifyPin() {
+      const inputPin = document.getElementById("pin-input").value;
+      if (inputPin === KASIE_PIN) {
+        closePinModal();
+        if (pendingAction) pendingAction();
+      } else {
+        showToast("PIN Rahasia Salah!", false);
+      }
+    }
+
+    // --- SAVE TO BACKEND ---
+    async function saveAssignment(rowId, petugasArray, statusVal) {
       const payload = {
         rowId: rowId,
         petugasList: petugasArray,
@@ -295,13 +561,42 @@
           allData[idx].status = statusVal;
         }
 
-        updateStats();
         filterData();
-        showToast("Penugasan & status berhasil disimpan!");
+        showToast("Penugasan berhasil diperbarui!");
       } catch (err) {
-        showToast("Gagal menyimpan data", false);
+        showToast("Gagal menyimpan perubahan", false);
         console.error(err);
       }
+    }
+
+    // --- REKAP WA GENERATOR ---
+    function copyRekapWA() {
+      const filtered = getFilteredData();
+      if (filtered.length === 0) {
+        showToast("Tidak ada data untuk direkap", false);
+        return;
+      }
+
+      const periodeText = document.getElementById("filter-periode").value || "SEMUA PERIODE";
+      let text = `*REKAP PENUGASAN TIM PUBLIKASI*\n*Periode: ${periodeText}*\n----------------------------------------\n\n`;
+
+      filtered.forEach((item, index) => {
+        const petugasStr = item.petugas && item.petugas.length > 0 ? item.petugas.join(", ") : "_Belum ada_";
+        let statusIcon = "⏳ In Progress";
+        if (item.status === "Done") statusIcon = "✅ Done";
+        if (item.status === "Pending Approval") statusIcon = "⚠️ Pending Approval Kasie";
+
+        text += `${index + 1}. *${item.kegiatan}* (${item.unit})\n`;
+        text += `   📅 ${item.tglFormatted} | 👤 PIC: ${item.pic}\n`;
+        text += `   👥 Petugas: ${petugasStr}\n`;
+        text += `   📌 Status: ${statusIcon}\n\n`;
+      });
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Rekap WA berhasil disalin ke Clipboard!");
+      }).catch(err => {
+        showToast("Gagal menyalin teks", false);
+      });
     }
 
     function showToast(msg, isSuccess = true) {
@@ -310,7 +605,7 @@
       const toastIcon = document.getElementById("toast-icon");
 
       toastMsg.innerText = msg;
-      toastIcon.className = isSuccess ? "fa-solid fa-circle-check text-emerald-400 text-lg" : "fa-solid fa-triangle-exclamation text-rose-400 text-lg";
+      toastIcon.className = isSuccess ? "fa-solid fa-circle-check text-emerald-400" : "fa-solid fa-triangle-exclamation text-rose-400";
 
       toast.classList.remove("opacity-0", "pointer-events-none");
       setTimeout(() => {
