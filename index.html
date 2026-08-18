@@ -156,9 +156,14 @@
             <input type="time" id="m-waktu" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white">
           </div>
           <div>
-            <label class="block text-slate-400 mb-1">PIC (Nama & No HP)</label>
-            <input type="text" id="m-pic" placeholder="Nama - 0812xxx" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white">
+            <label class="block text-slate-400 mb-1">PIC Kegiatan (Nama & No HP)</label>
+            <input type="text" id="m-pic" placeholder="Contoh: Leo - 082113866890" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white">
           </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Kategori / Jenis Pekerjaan</label>
+          <input type="text" id="m-kategori" placeholder="Contoh: Ekspedisi Camp / Desain Grafis" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white">
         </div>
 
         <div>
@@ -209,6 +214,7 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_xCKxRuEXBsyCtx_yAp9lYIwiUUUW8_UNIkXgBs0f9qeQXZ-n77xete6RpIxNVwYZ/exec";
     const KASIE_PIN = "1234"; 
     const TEAM_MEMBERS = ["Magang", "Dodai", "Nia", "Wahyu", "Yesi", "Indri"];
+    const INDO_MONTHS = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
     let allData = [];
     let pendingAction = null;
@@ -220,13 +226,12 @@
       renderMendadakPersonelCheckboxes();
     });
 
-    // 1. DYNAMIC PERIODE DROPDOWN (Bulan -4 s/d Bulan +3)
+    // 1. DROPDOWN PERIODE DINAMIS
     function initPeriodeDropdown() {
       const select = document.getElementById("filter-periode");
       select.innerHTML = "";
 
       const now = new Date();
-      const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
       const optAll = document.createElement("option");
       optAll.value = "";
@@ -235,13 +240,109 @@
 
       for (let i = -4; i <= 3; i++) {
         const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
-        const label = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+        const label = `${INDO_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
         const opt = document.createElement("option");
         opt.value = label;
         opt.textContent = label;
         if (i === 0) opt.selected = true; // Auto select bulan berjalan
         select.appendChild(opt);
       }
+    }
+
+    // 2. PARSER TANGGAL & MINGGUAN UNIVERSAL
+    function parseToDate(input) {
+      if (!input) return null;
+      if (input instanceof Date && !isNaN(input)) return input;
+
+      let str = String(input).trim();
+      let d = new Date(str);
+      if (!isNaN(d.getTime())) return d;
+
+      const monthMap = {
+        'januari': 0, 'jan': 0, 'january': 0,
+        'februari': 1, 'feb': 1, 'february': 1,
+        'maret': 2, 'mar': 2, 'march': 2,
+        'april': 3, 'apr': 3,
+        'mei': 4, 'may': 4,
+        'juni': 5, 'jun': 5, 'june': 5,
+        'juli': 6, 'jul': 6, 'july': 6,
+        'agustus': 7, 'agu': 7, 'aug': 7, 'august': 7,
+        'september': 8, 'sep': 8,
+        'oktober': 9, 'okt': 9, 'oct': 9, 'october': 9,
+        'november': 10, 'nov': 10,
+        'desember': 11, 'des': 11, 'dec': 11, 'december': 11
+      };
+
+      const matchIndo = str.toLowerCase().match(/(\d{1,2})[\s\-\/]+([a-z0-9]+)[\s\-\/]+(\d{4})/);
+      if (matchIndo) {
+        const day = parseInt(matchIndo[1], 10);
+        const monthToken = matchIndo[2];
+        const year = parseInt(matchIndo[3], 10);
+
+        let monthIndex = -1;
+        if (monthMap[monthToken] !== undefined) {
+          monthIndex = monthMap[monthToken];
+        } else if (!isNaN(parseInt(monthToken, 10))) {
+          monthIndex = parseInt(monthToken, 10) - 1;
+        }
+
+        if (monthIndex >= 0 && monthIndex <= 11) {
+          return new Date(year, monthIndex, day);
+        }
+      }
+      return null;
+    }
+
+    function formatBulanTahun(dateObj) {
+      if (!dateObj) return "";
+      return `${INDO_MONTHS[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+    }
+
+    // 3. NORMALISASI PERIODE & NAMA PIC vs KATEGORI
+    function normalizeItemData(item) {
+      let picRaw = (item.pic || '').trim();
+      let kategoriRaw = (item.jenisKerja || item.kategori || '').trim();
+
+      // Cek apakah data PIC (Nomor HP / Nama Orang) tertukar dengan Kategori
+      const hasPhoneInKategori = /(?:08|\+?62)\d{7,}/.test(kategoriRaw);
+      const hasPhoneInPic = /(?:08|\+?62)\d{7,}/.test(picRaw);
+
+      let finalPic = picRaw;
+      let finalKategori = kategoriRaw;
+
+      if (hasPhoneInKategori && !hasPhoneInPic) {
+        // Swap jika tertukar dari kolom Google Sheet
+        finalPic = kategoriRaw;
+        finalKategori = picRaw;
+      }
+
+      // Normalisasi Bulan Tahun agar cocok dengan dropdown filter
+      let dateObj = parseToDate(item.tgl || item.tglFormatted || item.tanggal);
+      let bulanTahun = item.bulanTahun;
+
+      if (dateObj) {
+        bulanTahun = formatBulanTahun(dateObj);
+      } else if (item.bulanTahun) {
+        // Konversi "August 2026" ke "Agustus 2026"
+        const parts = item.bulanTahun.trim().split(" ");
+        if (parts.length === 2) {
+          const mName = parts[0].toLowerCase();
+          const yNum = parts[1];
+          for (let i = 0; i < INDO_MONTHS.length; i++) {
+            if (INDO_MONTHS[i].toLowerCase().startsWith(mName.substring(0, 3))) {
+              bulanTahun = `${INDO_MONTHS[i]} ${yNum}`;
+              break;
+            }
+          }
+        }
+      }
+
+      return {
+        ...item,
+        pic: finalPic,
+        kategori: finalKategori,
+        bulanTahun: bulanTahun || item.bulanTahun
+      };
     }
 
     async function loadData() {
@@ -257,8 +358,10 @@
 
       try {
         const response = await fetch(SCRIPT_URL);
-        allData = await response.json();
+        const rawData = await response.json();
         
+        allData = rawData.map(normalizeItemData);
+
         detectScheduleConflicts();
         filterData();
       } catch (err) {
@@ -270,7 +373,7 @@
       }
     }
 
-    // DETEKSI BENTROK JADWAL REAL-TIME
+    // DETEKSI BENTROK JADWAL
     function detectScheduleConflicts() {
       allData.forEach(item => {
         item.isConflict = false;
@@ -282,9 +385,7 @@
           const a = allData[i];
           const b = allData[j];
 
-          // Cek jika pada tanggal yang sama
           if (a.tglFormatted && b.tglFormatted && a.tglFormatted === b.tglFormatted) {
-            // Cek apakah ada personel yang sama bertugas di kedua kegiatan
             const sharedPersonnel = (a.petugas || []).filter(p => (b.petugas || []).includes(p));
 
             if (sharedPersonnel.length > 0) {
@@ -305,8 +406,9 @@
       const filtered = allData.filter(item => {
         const matchSearch = item.kegiatan.toLowerCase().includes(searchVal) ||
                             (item.pic && item.pic.toLowerCase().includes(searchVal)) ||
+                            (item.kategori && item.kategori.toLowerCase().includes(searchVal)) ||
                             item.unit.toLowerCase().includes(searchVal);
-        const matchPeriode = !periodeVal || item.bulanTahun === periodeVal;
+        const matchPeriode = !periodeVal || (item.bulanTahun && item.bulanTahun.trim().toLowerCase() === periodeVal.trim().toLowerCase());
         return matchSearch && matchPeriode;
       });
 
@@ -316,7 +418,6 @@
     }
 
     function updateAnalytics(dataToUse) {
-      // Chart Sebaran
       const unitCounts = {};
       dataToUse.forEach(d => {
         const u = d.unit || "Lainnya";
@@ -344,7 +445,6 @@
         }
       });
 
-      // Stats Personel
       const personnelGrid = document.getElementById("personnel-stats-grid");
       personnelGrid.innerHTML = TEAM_MEMBERS.map(member => {
         let total = 0, done = 0, inProgress = 0;
@@ -403,7 +503,7 @@
               <div class="text-[11px] font-semibold text-slate-400 uppercase">${escapeHtml(item.unit)}</div>
 
               ${item.isConflict ? `
-                <div class="mt-2 text-[10px] bg-rose-500/20 text-rose-300 border border-rose-500/50 p-1.5 rounded font-bold" title="${escapeHtml(item.conflictWith.join(' | '))}">
+                <div class="mt-2 text-[10px] bg-rose-500/20 text-rose-300 border border-rose-500/50 p-1.5 rounded font-bold">
                   <i class="fa-solid fa-triangle-exclamation text-rose-400 me-1"></i>BENTROK JADWAL!
                 </div>
               ` : ''}
@@ -414,7 +514,7 @@
               <div>
                 <h4 class="font-bold text-white text-base leading-snug">${escapeHtml(item.kegiatan)}</h4>
                 <p class="text-xs text-slate-300 font-medium mt-0.5">
-                  <i class="fa-solid fa-user-tag text-indigo-400 me-1"></i>PIC: <span class="text-indigo-200">${escapeHtml(item.pic || '-')}</span>
+                  <i class="fa-solid fa-user-tag text-indigo-400 me-1"></i>PIC: <span class="text-indigo-200 font-semibold">${escapeHtml(item.pic || '-')}</span>
                 </p>
               </div>
 
@@ -426,7 +526,7 @@
                 
                 <div id="detail-${item.rowId}" class="hidden mt-2 bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs text-slate-300 space-y-2">
                   <p class="leading-relaxed"><strong>Penjelasan Tugas:</strong><br>${escapeHtml(item.detail || 'Tidak ada catatan detail.')}</p>
-                  ${item.jenisKerja ? `<p class="text-[11px] text-slate-400 border-t border-slate-800 pt-1.5"><strong>Kategori:</strong> ${escapeHtml(item.jenisKerja)}</p>` : ''}
+                  ${item.kategori ? `<p class="text-[11px] text-slate-400 border-t border-slate-800 pt-1.5"><strong>Kategori:</strong> ${escapeHtml(item.kategori)}</p>` : ''}
                 </div>
               </div>
             </div>
@@ -472,7 +572,7 @@
       }
     }
 
-    // HANDLERS & KASIE PIN
+    // HANDLERS & PIN KASIE
     function requestTogglePersonel(rowId, memberName) {
       pendingAction = () => {
         const item = allData.find(d => d.rowId === rowId);
@@ -578,7 +678,8 @@
         unit: document.getElementById("m-unit").value,
         tgl: tgl,
         waktu: document.getElementById("m-waktu").value || "07:00 AM",
-        pic: document.getElementById("m-pic").value.trim() || "Mandiri",
+        pic: document.getElementById("m-pic").value.trim() || "-",
+        jenisKerja: document.getElementById("m-kategori").value.trim() || "-",
         detail: document.getElementById("m-detail").value.trim() || "-",
         petugasList: selectedPersonel
       };
@@ -607,8 +708,9 @@
       const filtered = allData.filter(item => {
         const matchSearch = item.kegiatan.toLowerCase().includes(searchVal) ||
                             (item.pic && item.pic.toLowerCase().includes(searchVal)) ||
+                            (item.kategori && item.kategori.toLowerCase().includes(searchVal)) ||
                             item.unit.toLowerCase().includes(searchVal);
-        const matchPeriode = !periodeVal || item.bulanTahun === periodeVal;
+        const matchPeriode = !periodeVal || (item.bulanTahun && item.bulanTahun.trim().toLowerCase() === periodeVal.trim().toLowerCase());
         return matchSearch && matchPeriode;
       });
 
@@ -626,6 +728,7 @@
         text += `${index + 1}. *${item.kegiatan}* (${item.unit})\n`;
         text += `   📅 ${item.tglFormatted} | 🕐 ${item.waktu || '07:00 AM'}\n`;
         text += `   👤 PIC: ${item.pic || '-'}\n`;
+        text += `   📂 Kategori: ${item.kategori || '-'}\n`;
         text += `   👥 Petugas: ${petugasStr}\n`;
         text += `   📌 Status: ${statusIcon}\n\n`;
       });
