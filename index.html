@@ -1,345 +1,250 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kontrol Penugasan Publikasi</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KONTROL PENUGASAN PUBLIKASI</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-  </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen pb-10">
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen font-sans p-4 md:p-6">
 
-  <!-- Header / Navbar -->
-  <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-30 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+  <!-- HEADER -->
+  <div class="max-w-7xl mx-auto space-y-6">
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#151c2c] p-4 rounded-xl border border-slate-800 shadow-lg">
       <div class="flex items-center gap-3">
-        <div class="p-2 bg-indigo-600 rounded-lg text-white">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <div class="bg-indigo-600 p-2.5 rounded-lg">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
         </div>
         <div>
-          <h1 class="text-lg font-bold text-white leading-tight">KONTROL PENUGASAN PUBLIKASI</h1>
+          <h1 class="text-lg font-bold tracking-wide uppercase">Kontrol Penugasan Publikasi</h1>
           <p class="text-xs text-slate-400">Sistem Manajemen Brief & Brief Strategis</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-2">
-        <button onclick="openMendadakModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-4 py-2 rounded-lg text-sm flex items-center gap-1.5 transition">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1a1 1 0 10-2 0v1a1 1 0 102 0zM12 14a2 2 0 100-4 2 2 0 000 4z"/></svg>
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="openModalOrder()" class="bg-amber-600 hover:bg-amber-500 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
           + Order Mendadak
         </button>
-        <button onclick="copyRekapWA()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2 rounded-lg text-sm flex items-center gap-1.5 transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+        <button onclick="copyRekapWA()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
           Copy Rekap Grup WA
         </button>
-        <button onclick="loadData()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 p-2 rounded-lg transition" title="Refresh Data">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        <button onclick="loadData()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-2.5 rounded-lg transition" title="Refresh Data">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         </button>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <!-- Main Container -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
-
-    <!-- Filter & Search Bar -->
-    <div class="bg-slate-800/80 backdrop-blur rounded-xl p-4 border border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-3 w-full sm:w-auto">
-        <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Periode:</label>
-        <select id="periodeSelect" onchange="renderData()" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <!-- Populated by JS -->
+    <!-- FILTER BAR -->
+    <div class="bg-[#151c2c] p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3 w-full md:w-auto">
+        <label class="text-xs font-bold text-slate-400 tracking-wider">PERIODE:</label>
+        <select id="filterPeriode" onchange="applyFilters()" class="bg-[#0b0f19] border border-slate-700 text-white text-sm rounded-lg p-2 font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
+          <option value="Agustus 2026">Agustus 2026</option>
+          <option value="September 2026">September 2026</option>
+          <option value="Oktober 2026">Oktober 2026</option>
+          <option value="Semua">Semua Periode</option>
         </select>
       </div>
-      <div class="relative w-full sm:w-72">
-        <input type="text" id="searchInput" oninput="renderData()" placeholder="Cari kegiatan, PIC, unit..." class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-9 pr-3 py-1.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        <svg class="w-4 h-4 text-slate-500 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+
+      <div class="relative w-full md:w-80">
+        <svg class="w-4 h-4 absolute left-3 top-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Cari kegiatan, PIC, unit..." class="w-full bg-[#0b0f19] border border-slate-700 rounded-lg pl-9 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 outline-none">
       </div>
     </div>
 
-    <!-- Grid: Chart & Distribusi Tugas -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <!-- Sebaran Order Per Unit (Left) -->
-      <div class="lg:col-span-5 bg-slate-800/80 rounded-xl p-5 border border-slate-700 flex flex-col justify-between">
-        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path></svg>
+    <!-- TOP SECTION: CHART & DISTRIBUSI TUGAS -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- CHART SEBARAN ORDER -->
+      <div class="bg-[#151c2c] p-5 rounded-xl border border-slate-800 flex flex-col">
+        <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase mb-4 flex items-center gap-2">
+          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 0120.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>
           Sebaran Order Per Unit
         </h2>
-        <div class="relative flex items-center justify-center min-h-[200px]">
-          <canvas id="unitChart"></canvas>
+        <div class="flex-1 flex items-center justify-center min-h-[220px]">
+          <canvas id="chartUnit"></canvas>
         </div>
       </div>
 
-      <!-- Distribusi Tugas Personel (Right) -->
-      <div class="lg:col-span-7 bg-slate-800/80 rounded-xl p-5 border border-slate-700">
-        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+      <!-- DISTRIBUSI TUGAS PERSONEL -->
+      <div class="bg-[#151c2c] p-5 rounded-xl border border-slate-800">
+        <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase mb-4 flex items-center gap-2">
+          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
           Distribusi Tugas Personel
         </h2>
-        <div id="personelSummaryGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <!-- Populated by JS -->
+        <div id="personelGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <!-- Rendered dynamically -->
         </div>
       </div>
+
     </div>
 
-    <!-- Daftar Order Masuk -->
-    <div class="bg-slate-800/80 rounded-xl border border-slate-700 overflow-hidden">
-      <div class="p-4 border-b border-slate-700 flex items-center justify-between">
-        <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
-          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+    <!-- BOTTOM SECTION: DAFTAR ORDER MASUK -->
+    <div class="bg-[#151c2c] p-5 rounded-xl border border-slate-800 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase flex items-center gap-2">
+          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
           Daftar Order Masuk
         </h2>
-        <span id="orderCountBadge" class="bg-indigo-900/60 text-indigo-300 text-xs font-semibold px-2.5 py-1 rounded-full border border-indigo-700">0 Order</span>
+        <span id="orderBadgeCount" class="bg-indigo-900/50 text-indigo-300 text-xs font-bold px-3 py-1 rounded-full border border-indigo-700/50">0 Order</span>
       </div>
 
-      <div id="orderListContainer" class="p-4 space-y-4">
-        <!-- Cards Populated by JS -->
-      </div>
-    </div>
-
-  </main>
-
-  <!-- MODAL: KUNCI KEAMANAN KASIE -->
-  <div id="pinModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl text-center space-y-4">
-      <div class="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto border border-amber-500/20">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-      </div>
-      <div>
-        <h3 class="text-base font-bold text-white uppercase tracking-wider">Kunci Keamanan Kasie</h3>
-        <p class="text-xs text-slate-400 mt-1">Masukkan PIN rahasia untuk mengubah penugasan:</p>
-      </div>
-      
-<input 
-  type="password" 
-  id="pinInput" 
-  onkeydown="if(event.key==='Enter') submitPin()" 
-  placeholder="••••••••" 
-  class="w-full text-center tracking-widest text-lg bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" 
-/>
-      
-      <div class="flex gap-3 pt-2">
-        <button onclick="closePinModal()" class="w-1/2 bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm font-medium py-2.5 rounded-xl transition">Batal</button>
-        <button onclick="submitPin()" class="w-1/2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold py-2.5 rounded-xl shadow-lg transition">OK</button>
+      <div id="orderContainer" class="space-y-4">
+        <!-- Rendered dynamically -->
       </div>
     </div>
   </div>
 
-  <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none z-50">
-    <span id="toastMsg" class="text-sm"></span>
+  <!-- MODAL ORDER MENDADAK -->
+  <div id="modalOrderMendadak" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 items-center justify-center p-4">
+    <div class="bg-[#151c2c] border border-slate-800 rounded-xl w-full max-w-lg p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-amber-500 flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          + Tambah Order Mendadak
+        </h3>
+        <button onclick="closeModalOrder()" class="text-slate-400 hover:text-white">&times;</button>
+      </div>
+
+      <form id="formOrderMendadak" onsubmit="handleOrderMendadakSubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Unit / Divisi</label>
+          <select id="inputUnit" required class="w-full bg-[#0b0f19] border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:ring-2 focus:ring-amber-500 outline-none">
+            <option value="SMA">SMA</option>
+            <option value="SMP">SMP</option>
+            <option value="KB-TK">KB-TK</option>
+            <option value="Yayasan">Yayasan</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Nama PIC & No. Kontak</label>
+          <input type="text" id="inputPIC" required placeholder="Contoh: Leonardus - 082113866890" class="w-full bg-[#0b0f19] border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:ring-2 focus:ring-amber-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Nama Kegiatan / Judul Brief</label>
+          <input type="text" id="inputKegiatan" required placeholder="Contoh: Publikasi Penerimaan Siswa Baru" class="w-full bg-[#0b0f19] border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:ring-2 focus:ring-amber-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Kategori</label>
+          <input type="text" id="inputKategori" placeholder="A. Informasi Kegiatan Kalender Akademik" class="w-full bg-[#0b0f19] border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:ring-2 focus:ring-amber-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Penjelasan / Detail Tugas</label>
+          <textarea id="inputDetail" rows="3" placeholder="Detail instruksi order mendadak..." class="w-full bg-[#0b0f19] border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:ring-2 focus:ring-amber-500 outline-none"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
+          <button type="button" onclick="closeModalOrder()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold rounded-lg transition">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white text-sm font-semibold rounded-lg transition">Simpan Order</button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <!-- JavaScript Logic -->
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-5 right-5 hidden z-50 bg-slate-800 text-white px-4 py-3 rounded-xl border border-slate-700 shadow-2xl text-sm font-medium transition-all"></div>
+
+  <!-- JAVASCRIPT LOGIC -->
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzEJIqtNYNEKJ2My8aApMeO4NzCy23oH8H1n3F1_tuYo_6yf8iToUWIrJ87JPqzQYJQ/exec";
-    
-    const KASIE_PIN = "yesi123";
-    const TEAM_MEMBERS = ["Magang", "Dodai", "Nia", "Wahyu", "Yesi", "Indri"];
-    const INDO_MONTHS = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    // GANTI DEPLOYMENT URL GOOGLE APPS SCRIPT ANDA DI SINI:
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_XXXXXXXXXX/exec";
+    const APP_PIN = "1234"; // PIN Akses Petugas
 
-    let allData = [];
-    let pendingAction = null;
-    let unitChartInstance = null;
-    let isUnlocked = false;
+    const ALL_PERSONEL = ["MAGANG", "DODAI", "NIA", "WAHYU", "YESI", "INDRI"];
+    let rawData = [];
+    let filteredData = [];
+    let chartInstance = null;
+    let isAuthenticated = false;
 
-    document.addEventListener("DOMContentLoaded", () => {
-      initPeriodeDropdown();
-      loadData();
-    });
-
-    function initPeriodeDropdown() {
-      const select = document.getElementById("periodeSelect");
-      select.innerHTML = "";
-      
-      // Default generate 12 bulan untuk tahun 2026
-      INDO_MONTHS.forEach(m => {
-        const opt = document.createElement("option");
-        opt.value = `${m} 2026`;
-        opt.textContent = `${m} 2026`;
-        select.appendChild(opt);
-      });
-      select.value = "Agustus 2026";
+    // PIN Authentication Check
+    function checkAuth() {
+      if (isAuthenticated) return true;
+      const input = prompt("Masukkan PIN Otentikasi Petugas:");
+      if (input === APP_PIN) {
+        isAuthenticated = true;
+        return true;
+      } else {
+        showToast("PIN Salah! Akses ditolak.", true);
+        return false;
+      }
     }
 
+    // Load Data
     async function loadData() {
-  showToast("Memuat data...");
-  try {
-    const res = await fetch(SCRIPT_URL);
-    if (!res.ok) throw new Error(`HTTP Status ${res.status}`);
-    
-    const rawText = await res.text();
-    
-    // Deteksi jika server mengembalikan halaman HTML login / error
-    if (rawText.trim().startsWith("<")) {
-      throw new Error("Izin Google Apps Script belum set ke 'Anyone' (Siapa Saja) atau URL Web App salah.");
-    }
-
-    allData = JSON.parse(rawText);
-    renderData();
-    showToast("Data berhasil diperbarui!");
-  } catch (err) {
-    console.error("Gagal memuat data:", err);
-    showToast("Gagal mengambil data! " + err.message, true);
-  }
-}
-
-    function parseTglDanWaktu(rawStr) {
-      if (!rawStr) return { dateObj: null, timeStr: "07:00 AM", bulanTahun: "", tglFormatted: "-" };
-
-      const str = String(rawStr).trim();
-      const monthMap = {
-        'jan': 0, 'januari': 0, 'january': 0,
-        'feb': 1, 'februari': 1, 'february': 1,
-        'mar': 2, 'maret': 2, 'march': 2,
-        'apr': 3, 'april': 3,
-        'mei': 4, 'may': 4,
-        'jun': 5, 'juni': 5, 'june': 5,
-        'jul': 6, 'juli': 6, 'july': 6,
-        'agu': 7, 'agustus': 7, 'aug': 7, 'august': 7,
-        'sep': 8, 'september': 8,
-        'okt': 9, 'oktober': 9, 'oct': 9, 'october': 9,
-        'nov': 10, 'november': 10,
-        'des': 11, 'desember': 11, 'dec': 11, 'december': 11
-      };
-
-      let day = null, monthIdx = null, year = null;
-
-      // Match format teks: "19 Agustus 2026, Pk 07.00"
-      const mText = str.match(/(\d{1,2})[\s\-\/\.]+([a-zA-Z]+)[\s\-\/\.]+(\d{4})/);
-      if (mText) {
-        day = parseInt(mText[1], 10);
-        const mStr = mText[2].toLowerCase();
-        year = parseInt(mText[3], 10);
-        if (monthMap[mStr] !== undefined) monthIdx = monthMap[mStr];
-      }
-
-      // Match format numerik: ISO "2026-08-19" atau "19/08/2026"
-      if (monthIdx === null) {
-        const mIso = str.match(/(\d{4})[\-\/](\d{1,2})[\-\/](\d{1,2})/);
-        if (mIso) {
-          year = parseInt(mIso[1], 10);
-          monthIdx = parseInt(mIso[2], 10) - 1;
-          day = parseInt(mIso[3], 10);
-        } else {
-          const mNum = str.match(/(\d{1,2})[\-\/](\d{1,2})[\-\/](\d{4})/);
-          if (mNum) {
-            day = parseInt(mNum[1], 10);
-            monthIdx = parseInt(mNum[2], 10) - 1;
-            year = parseInt(mNum[3], 10);
-          }
-        }
-      }
-
-      // Format Jam
-      let timeStr = "08:00 AM";
-      const mTime = str.match(/(?:pk\.?|jam)?\s*(\d{1,2})[\:\.](\d{2})/i);
-      if (mTime) {
-        let hh = parseInt(mTime[1], 10);
-        const mm = mTime[2];
-        const ampm = hh >= 12 ? "PM" : "AM";
-        if (hh > 12) hh -= 12;
-        if (hh === 0) hh = 12;
-        timeStr = `${String(hh).padStart(2, '0')}:${mm} ${ampm}`;
-      }
-
-      if (monthIdx !== null && monthIdx >= 0 && monthIdx <= 11 && year) {
-        const bulanTahun = `${INDO_MONTHS[monthIdx]} ${year}`;
-        const tglFormatted = day ? `${day} ${INDO_MONTHS[monthIdx]} ${year}` : bulanTahun;
-        return { timeStr, bulanTahun, tglFormatted };
-      }
-
-      return { timeStr, bulanTahun: "", tglFormatted: str };
-    }
-
-    function renderData() {
-      const activePeriode = document.getElementById("periodeSelect").value;
-      const searchKeyword = document.getElementById("searchInput").value.toLowerCase().trim();
-
-      const filtered = allData.filter(item => {
-        const parsed = parseTglDanWaktu(item.rawTglWaktu);
-        const matchPeriode = parsed.bulanTahun === activePeriode || (!parsed.bulanTahun && activePeriode === "Agustus 2026");
+      showToast("Memuat data...");
+      try {
+        const res = await fetch(SCRIPT_URL);
+        if (!res.ok) throw new Error(`HTTP Status ${res.status}`);
         
-        const matchSearch = !searchKeyword || 
-          item.kegiatan.toLowerCase().includes(searchKeyword) ||
-          item.pic.toLowerCase().includes(searchKeyword) ||
-          item.unit.toLowerCase().includes(searchKeyword);
+        const rawText = await res.text();
+        if (rawText.trim().startsWith("<")) {
+          throw new Error("Izin Google Apps Script belum diset ke 'Anyone'.");
+        }
 
-        return matchPeriode && matchSearch;
-      });
-
-      renderChart(filtered);
-      renderPersonelSummary(filtered);
-      renderOrderList(filtered);
+        rawData = JSON.parse(rawText);
+        applyFilters();
+        showToast("Data berhasil diperbarui!");
+      } catch (err) {
+        console.error(err);
+        showToast("Gagal mengambil data! " + err.message, true);
+      }
     }
 
-    function renderPersonelSummary(filteredData) {
-      const summaryGrid = document.getElementById("personelSummaryGrid");
-      summaryGrid.innerHTML = "";
+    // Filter Logic
+    function applyFilters() {
+      const periode = document.getElementById("filterPeriode").value;
+      const query = document.getElementById("searchInput").value.toLowerCase();
 
-      TEAM_MEMBERS.forEach(member => {
-        let total = 0, done = 0, progress = 0;
-
-        filteredData.forEach(item => {
-          if (item.petugas && item.petugas.includes(member)) {
-            total++;
-            if (item.status === "Selesai") done++;
-            else progress++;
-          }
-        });
-
-        summaryGrid.innerHTML += `
-          <div class="bg-slate-900/60 border border-slate-700/70 rounded-xl p-3 flex flex-col justify-between">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-slate-200 uppercase">${member}</span>
-              <span class="text-xs font-semibold text-slate-400">${total} TUGAS</span>
-            </div>
-            <div class="flex items-center gap-3 mt-2 text-xs font-semibold">
-              <span class="text-emerald-400 flex items-center gap-1">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                ${done}
-              </span>
-              <span class="text-amber-400 flex items-center gap-1">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                ${progress}
-              </span>
-            </div>
-          </div>
-        `;
+      filteredData = rawData.filter(item => {
+        const matchQuery = (item.kegiatan || "").toLowerCase().includes(query) ||
+                           (item.pic || "").toLowerCase().includes(query) ||
+                           (item.unit || "").toLowerCase().includes(query);
+        
+        // Simple period filter logic (or default show all if 'Semua')
+        const matchPeriode = periode === "Semua" || (item.rawTglWaktu || "").includes("2026");
+        return matchQuery && matchPeriode;
       });
+
+      renderChart();
+      renderPersonelStats();
+      renderOrders();
     }
 
-    function renderChart(filteredData) {
-      const unitCounts = {};
+    // Render Chart
+    function renderChart() {
+      const ctx = document.getElementById('chartUnit').getContext('2d');
+      const counts = {};
+
       filteredData.forEach(item => {
         const u = item.unit || "Lainnya";
-        unitCounts[u] = (unitCounts[u] || 0) + 1;
+        counts[u] = (counts[u] || 0) + 1;
       });
 
-      const labels = Object.keys(unitCounts);
-      const dataValues = Object.values(unitCounts);
+      const labels = Object.keys(counts);
+      const dataValues = Object.values(counts);
 
-      const ctx = document.getElementById("unitChart").getContext("2d");
-      if (unitChartInstance) unitChartInstance.destroy();
+      if (chartInstance) chartInstance.destroy();
 
-      if (labels.length === 0) {
-        return;
-      }
-
-      unitChartInstance = new Chart(ctx, {
+      chartInstance = new Chart(ctx, {
         type: 'pie',
         data: {
-          labels: labels,
+          labels: labels.length ? labels : ["Tidak Ada Data"],
           datasets: [{
-            data: dataValues,
-            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#6366f1']
+            data: dataValues.length ? dataValues : [1],
+            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#64748b'],
+            borderWidth: 2,
+            borderColor: '#151c2c'
           }]
         },
         options: {
@@ -352,77 +257,91 @@
       });
     }
 
-    function renderOrderList(filteredData) {
-      const container = document.getElementById("orderListContainer");
-      document.getElementById("orderCountBadge").textContent = `${filteredData.length} Order`;
+    // Render Personel Stats
+    function renderPersonelStats() {
+      const grid = document.getElementById("personelGrid");
+      grid.innerHTML = "";
+
+      ALL_PERSONEL.forEach(pName => {
+        let total = 0;
+        let done = 0;
+        let inProgress = 0;
+
+        filteredData.forEach(item => {
+          if (Array.isArray(item.petugas) && item.petugas.includes(pName)) {
+            total++;
+            if (item.status === "Done") done++;
+            else inProgress++;
+          }
+        });
+
+        grid.innerHTML += `
+          <div class="bg-[#0b0f19] p-3 rounded-lg border border-slate-800 flex flex-col justify-between">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-bold text-slate-200">${pName}</span>
+              <span class="text-[10px] bg-slate-800 text-slate-400 font-bold px-1.5 py-0.5 rounded">${total} TUGAS</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs font-semibold">
+              <span class="text-emerald-400 flex items-center gap-1">✓ ${done}</span>
+              <span class="text-amber-400 flex items-center gap-1">⏱ ${inProgress}</span>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Render Order Cards
+    function renderOrders() {
+      const container = document.getElementById("orderContainer");
+      document.getElementById("orderBadgeCount").innerText = `${filteredData.length} Order`;
       container.innerHTML = "";
 
       if (filteredData.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-12 text-slate-500">
-            <svg class="w-12 h-12 mx-auto mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
-            Tidak ada data penugasan pada periode ini.
-          </div>
-        `;
+        container.innerHTML = `<div class="text-center py-8 text-slate-500 text-sm">Tidak ada data order ditemukan.</div>`;
         return;
       }
 
       filteredData.forEach(item => {
-        const parsed = parseTglDanWaktu(item.rawTglWaktu);
+        const assignedList = Array.isArray(item.petugas) ? item.petugas : [];
 
-        const memberButtons = TEAM_MEMBERS.map(member => {
-          const isSelected = item.petugas && item.petugas.includes(member);
+        const personelButtons = ALL_PERSONEL.map(pName => {
+          const isSelected = assignedList.includes(pName);
+          const activeClass = isSelected ? "bg-indigo-600 text-white border-indigo-500 font-bold" : "bg-slate-800/60 text-slate-400 border-slate-700 hover:bg-slate-700";
           return `
-            <button 
-              onclick="requestPetugasToggle(${item.rowId}, '${member}')"
-              class="px-2.5 py-1 rounded-md text-xs font-medium transition ${
-                isSelected 
-                  ? 'bg-indigo-600 text-white font-bold shadow' 
-                  : 'bg-slate-700/60 text-slate-300 hover:bg-slate-600'
-              }">
-              ${member}
+            <button onclick="togglePersonel(${item.rowId}, '${pName}')" class="px-3 py-1 rounded text-xs border transition ${activeClass}">
+              ${pName}
             </button>
           `;
         }).join("");
 
         container.innerHTML += `
-          <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-4 space-y-3">
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              
-              <!-- Tanggal & Judul -->
-              <div class="space-y-1">
-                <div class="flex items-center gap-2 text-xs font-semibold text-indigo-400">
-                  <span>${parsed.tglFormatted}</span>
-                  <span>•</span>
-                  <span>${parsed.timeStr}</span>
-                  <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700 ml-1">${item.unit}</span>
-                </div>
-                <h3 class="text-base font-bold text-white">${item.kegiatan}</h3>
-                <p class="text-xs text-slate-400">PIC: ${item.pic}</p>
+          <div class="bg-[#0b0f19] border border-slate-800 rounded-xl p-4 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-indigo-400">${item.rawTglWaktu || '-'}</span>
+                <span class="bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded border border-slate-700">${item.unit}</span>
               </div>
-
-              <!-- Action Status -->
-              <div>
-                <select 
-                  onchange="requestStatusChange(${item.rowId}, this.value)"
-                  class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-semibold ${item.status === 'Selesai' ? 'text-emerald-400 border-emerald-800' : 'text-amber-400 border-amber-800'} focus:outline-none">
-                  <option value="In Progress" ${item.status !== 'Selesai' ? 'selected' : ''}>⌛ In Progress</option>
-                  <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
-                </select>
-              </div>
+              <select onchange="updateStatus(${item.rowId}, this.value)" class="bg-[#151c2c] border border-slate-700 text-amber-400 text-xs font-bold rounded-lg px-2 py-1 outline-none">
+                <option value="In Progress" ${item.status === "In Progress" ? "selected" : ""}>⏳ In Progress</option>
+                <option value="Done" ${item.status === "Done" ? "selected" : ""}>✅ Done</option>
+                <option value="Pending" ${item.status === "Pending" ? "selected" : ""}>⏸ Pending</option>
+              </select>
             </div>
 
-            <!-- Detail Tugas -->
-            <div class="bg-slate-950/40 p-3 rounded-lg border border-slate-800 text-xs space-y-1">
-              <p class="text-slate-300"><span class="font-bold text-slate-400">Penjelasan Tugas:</span> ${item.detail}</p>
-              <p class="text-slate-400"><span class="font-bold text-slate-500">Kategori:</span> ${item.kategori}</p>
+            <div>
+              <h3 class="text-sm font-bold text-slate-100">${item.kegiatan}</h3>
+              <p class="text-xs text-slate-400">PIC: ${item.pic}</p>
             </div>
 
-            <!-- Pilih Personel -->
-            <div class="pt-1 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pilih Personel:</span>
+            <div class="bg-[#151c2c] p-3 rounded-lg border border-slate-800 text-xs text-slate-300 space-y-1">
+              <p><span class="text-slate-400 font-semibold">Penjelasan Tugas:</span> ${item.detail}</p>
+              <p><span class="text-slate-400 font-semibold">Kategori:</span> ${item.kategori}</p>
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Pilih Personel:</label>
               <div class="flex flex-wrap gap-1.5">
-                ${memberButtons}
+                ${personelButtons}
               </div>
             </div>
           </div>
@@ -430,119 +349,149 @@
       });
     }
 
-    /* Guard System PIN */
-    function requestPetugasToggle(rowId, namaPersonel) {
-      executeWithPin(() => togglePetugas(rowId, namaPersonel));
-    }
+    // Toggle Personel
+    async function togglePersonel(rowId, personName) {
+      if (!checkAuth()) return;
 
-    function requestStatusChange(rowId, newStatus) {
-      executeWithPin(() => updateStatus(rowId, newStatus));
-    }
-
-    function executeWithPin(actionFn) {
-      if (isUnlocked) {
-        actionFn();
-      } else {
-        pendingAction = actionFn;
-        document.getElementById("pinModal").classList.remove("hidden");
-        document.getElementById("pinInput").focus();
-      }
-    }
-
-    function submitPin() {
-      const input = document.getElementById("pinInput").value.trim().toLowerCase();
-      if (input === KASIE_PIN.toLowerCase()) {
-        isUnlocked = true;
-        closePinModal();
-        if (pendingAction) {
-          pendingAction();
-          pendingAction = null;
-        }
-        showToast("Akses Kasie Diberikan!");
-      } else {
-        showToast("PIN Rahasia Salah!", true);
-      }
-    }
-
-    function closePinModal() {
-      document.getElementById("pinModal").classList.add("hidden");
-      document.getElementById("pinInput").value = "";
-    }
-
-    async function togglePetugas(rowId, namaPersonel) {
-      const item = allData.find(d => d.rowId === rowId);
+      const item = rawData.find(d => d.rowId === rowId);
       if (!item) return;
 
-      if (!item.petugas) item.petugas = [];
-      const idx = item.petugas.indexOf(namaPersonel);
-      if (idx > -1) item.petugas.splice(idx, 1);
-      else item.petugas.push(namaPersonel);
+      let currentPetugas = Array.isArray(item.petugas) ? [...item.petugas] : [];
+      if (currentPetugas.includes(personName)) {
+        currentPetugas = currentPetugas.filter(p => p !== personName);
+      } else {
+        currentPetugas.push(personName);
+      }
 
-      renderData();
+      showToast("Memperbarui personel...");
+      item.petugas = currentPetugas;
+      renderPersonelStats();
+      renderOrders();
 
       try {
-        await fetch(SCRIPT_URL, {
+        const res = await fetch(SCRIPT_URL, {
           method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ rowId: rowId, petugas: item.petugas })
+          body: JSON.stringify({ rowId: rowId, petugas: currentPetugas })
         });
-        showToast("Petugas berhasil diperbarui!");
+        const result = await res.json();
+        if (result.status === "success") {
+          showToast("Personel berhasil diperbarui!");
+        } else {
+          throw new Error(result.message);
+        }
       } catch (err) {
-        showToast("Gagal menyimpan ke Google Sheets", true);
+        showToast("Gagal update personel: " + err.message, true);
+        loadData();
       }
     }
 
+    // Update Status
     async function updateStatus(rowId, newStatus) {
-      const item = allData.find(d => d.rowId === rowId);
-      if (!item) return;
+      if (!checkAuth()) return;
 
-      item.status = newStatus;
-      renderData();
-
+      showToast("Memperbarui status...");
       try {
-        await fetch(SCRIPT_URL, {
+        const res = await fetch(SCRIPT_URL, {
           method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ rowId: rowId, status: newStatus })
         });
-        showToast("Status berhasil diperbarui!");
+        const result = await res.json();
+        if (result.status === "success") {
+          showToast("Status berhasil diperbarui!");
+          const item = rawData.find(d => d.rowId === rowId);
+          if (item) item.status = newStatus;
+          applyFilters();
+        } else {
+          throw new Error(result.message);
+        }
       } catch (err) {
-        showToast("Gagal menyimpan ke Google Sheets", true);
+        showToast("Gagal update status: " + err.message, true);
+        loadData();
       }
     }
 
-    function showToast(msg, isError = false) {
-      const toast = document.getElementById("toast");
-      const toastMsg = document.getElementById("toastMsg");
-      toastMsg.textContent = msg;
-      
-      toast.className = `fixed bottom-5 right-5 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 z-50 ${
-        isError ? 'bg-rose-900 border border-rose-700 text-rose-100' : 'bg-slate-800 border border-slate-700 text-white'
-      }`;
-      
-      toast.classList.remove("opacity-0", "pointer-events-none");
-      setTimeout(() => toast.classList.add("opacity-0", "pointer-events-none"), 3000);
+    // Modal Order Mendadak Handlers
+    function openModalOrder() {
+      document.getElementById("modalOrderMendadak").style.display = "flex";
     }
 
-    function copyRekapWA() {
-      const activePeriode = document.getElementById("periodeSelect").value;
-      const filtered = allData.filter(item => parseTglDanWaktu(item.rawTglWaktu).bulanTahun === activePeriode);
+    function closeModalOrder() {
+      document.getElementById("modalOrderMendadak").style.display = "none";
+      document.getElementById("formOrderMendadak").reset();
+    }
 
-      let text = `*REKAP PENUGASAN PUBLIKASI - ${activePeriode.toUpperCase()}*\n\n`;
-      filtered.forEach((item, i) => {
-        const p = parseTglDanWaktu(item.rawTglWaktu);
-        const petugas = item.petugas && item.petugas.length ? item.petugas.join(", ") : "-";
-        text += `${i + 1}. *${item.kegiatan}* (${item.unit})\n`;
-        text += `   📅 ${p.tglFormatted} | ⏰ ${p.timeStr}\n`;
-        text += `   👤 Petugas: ${petugas}\n`;
-        text += `   📌 Status: ${item.status}\n\n`;
+    async function handleOrderMendadakSubmit(e) {
+      e.preventDefault();
+      
+      const payload = {
+        action: "addOrder",
+        unit: document.getElementById("inputUnit").value,
+        pic: document.getElementById("inputPIC").value,
+        kegiatan: document.getElementById("inputKegiatan").value,
+        kategori: document.getElementById("inputKategori").value,
+        detail: document.getElementById("inputDetail").value,
+        petugas: []
+      };
+
+      showToast("Menyimpan order mendadak...");
+      closeModalOrder();
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+        
+        const result = await res.json();
+        if (result.status === "success") {
+          showToast("Order mendadak berhasil dibuat!");
+          loadData();
+        } else {
+          throw new Error(result.message || "Gagal menyimpan");
+        }
+      } catch (err) {
+        console.error(err);
+        showToast("Gagal membuat order: " + err.message, true);
+      }
+    }
+
+    // Copy Rekap WhatsApp
+    function copyRekapWA() {
+      if (!filteredData.length) {
+        showToast("Tidak ada data untuk direkap!", true);
+        return;
+      }
+
+      let text = `*REKAP KONTROL PENUGASAN PUBLIKASI*\nPeriode: ${document.getElementById("filterPeriode").value}\n-----------------------------------\n\n`;
+
+      filteredData.forEach((item, idx) => {
+        const petugasStr = Array.isArray(item.petugas) && item.petugas.length ? item.petugas.join(", ") : "Belum Ada";
+        text += `${idx + 1}. *[${item.unit}] ${item.kegiatan}*\n`;
+        text += `   • PIC: ${item.pic}\n`;
+        text += `   • Status: ${item.status}\n`;
+        text += `   • Petugas: ${petugasStr}\n\n`;
       });
 
-      navigator.clipboard.writeText(text);
-      showToast("Rekap WA berhasil disalin!");
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Rekap WA berhasil dicopy!");
+      }).catch(err => {
+        showToast("Gagal menyalin rekap", true);
+      });
     }
+
+    // Helper Toast
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById("toast");
+      toast.innerText = msg;
+      toast.className = `fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl border shadow-2xl text-sm font-medium transition-all ${
+        isError ? "bg-rose-900 border-rose-700 text-rose-200" : "bg-slate-800 border-slate-700 text-slate-100"
+      }`;
+      toast.classList.remove("hidden");
+      setTimeout(() => toast.classList.add("hidden"), 3000);
+    }
+
+    // Inisialisasi awal
+    window.onload = loadData;
   </script>
 </body>
 </html>
